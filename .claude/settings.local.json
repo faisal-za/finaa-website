@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(create-payload-app:*)",
+      "Bash(npx create-payload-app:*)",
+      "Bash(npm init:*)",
+      "Bash(winpty npx create-payload-app@latest . --name finaa-website --template blank --db sqlite --no-deps)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(npm run tailwindcss init:*)",
+      "Bash(./node_modules/.bin/tailwindcss:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(tree:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(npx:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
