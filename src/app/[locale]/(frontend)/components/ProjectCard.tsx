@@ -29,20 +29,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
 
   const images = project.images || []
 
-  // Debug logging
-  console.log('ProjectCard Debug:', {
-    projectName: project.name,
-    imagesCount: images.length,
-    images: images.map((img: any, idx: number) => ({
-      index: idx,
-      url: img.image?.url,
-      hasImage: !!img.image,
-      imageObject: img.image
-    })),
-    currentIndex: current,
-    fullProject: project
-  })
-
   const onThumbClick = useCallback(
     (index: number) => {
       if (!mainApi || !thumbnailApi) return
@@ -74,7 +60,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
 
   return (
     <Card
-      className="group cursor-pointer bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative rounded-0 border-0"
+      className="group cursor-pointer bg-white transition-all duration-300 hover:-translate-y-1 relative border-0 rounded-none"
       style={{
         clipPath: 'polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%)',
         background: '#f7f2ee'
@@ -207,12 +193,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           {project.categories && project.categories.length > 0 && (
             <div className="">
               {project.categories.map((category: any) => (
-                <span
+                <p
                   key={category.id}
                   className="relative px-4 py-1 bg-[#9c5748] text-white text-xs font-semibold rounded-full"
                 >
                   {category.name}
-                </span>
+                </p>
               ))}
             </div>
           )}

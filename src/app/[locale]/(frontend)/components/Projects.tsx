@@ -3,15 +3,13 @@
 import React, { useState, useMemo } from 'react'
 import ProjectCard from './ProjectCard'
 import { Button } from '@/components/ui/button'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
 interface ProjectsProps {
   projects: any[]
-  categories: any[]
 }
 
-const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
-  const locale = useLocale()
+const Projects: React.FC<ProjectsProps> = ({ projects }) => {
   const t = useTranslations('projects')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
@@ -139,14 +137,6 @@ const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
         'منتجع صحي وسبا',
       ],
     },
-  ]
-
-  const fallbackCategories = [
-    { id: 'all', name: t('categories.all') },
-    { id: '1', name: t('categories.commercial') },
-    { id: '2', name: t('categories.residential') },
-    { id: '3', name: t('categories.institutional') },
-    { id: '4', name: t('categories.tourism') },
   ]
 
   const displayProjects = filteredProjects.length > 0 ? filteredProjects : fallbackProjects

@@ -44,6 +44,7 @@ export const Projects: CollectionConfig = {
             type: 'array',
             required: true,
             minRows: 1,
+            maxRows: 10,
             labels: {
                 singular: {
                     en: 'Image',
@@ -88,39 +89,49 @@ export const Projects: CollectionConfig = {
             },
         },
         {
-            name: 'status',
-            type: 'select',
-            defaultValue: 'in-progress',
+            name: "location",
             label: {
-                en: 'Status',
-                ar: 'الحالة',
+                ar: "الموقع",
+                en: "location"
             },
-            options: [
-                {
-                    label: {
-                        en: 'Planning',
-                        ar: 'التخطيط',
-                    },
-                    value: 'planning',
-                },
-                {
-                    label: {
-                        en: 'In Progress',
-                        ar: 'قيد التنفيذ',
-                    },
-                    value: 'in-progress',
-                },
-                {
-                    label: {
-                        en: 'Completed',
-                        ar: 'مكتمل',
-                    },
-                    value: 'completed',
-                },
-            ],
             admin: {
-                position: 'sidebar',
+                position: "sidebar"
             },
+            type: "text",
+            required: true
+        },
+        {
+            name: "end_date",
+            label: {
+                ar: "تاريخ الإ‘نشاء",
+                en: "End Date"
+            },
+            type: "date",
+            admin: {
+                position: "sidebar",
+                date: {
+                    pickerAppearance: "monthOnly",
+                }
+            }
+        },
+        {
+            name: "more_details",
+            type: "array",
+            maxRows: 4,
+            label: {
+                ar: "تفاصيل المشروع",
+                en: "Proejct Details"
+            },
+            fields: [
+                {
+                    name: "text",
+                    type: "text",
+                    label: {
+                        ar: "فقرة",
+                        an: "point"
+                    },
+                }
+            ]
         },
         {
             name: 'slug',

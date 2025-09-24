@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 
 interface ServicesProps {
   services: any[]
@@ -80,16 +81,13 @@ const Services = ({ services }: ServicesProps) => {
         {/* Decorative Elements */}
         <div className="relative mt-20">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="grid grid-cols-3 sm:gap-8 opacity-5">
-              {[...Array(3)].map((_, i) => (
-                <svg key={i} viewBox="0 0 200 200" className="w-24 sm:w-34">
-                  <path
-                    d="M40,40 L160,40 L180,60 L180,180 L60,180 L40,160 Z"
-                    fill="#302c30"
-                    transform={`rotate(${i * 30} 100 100)`}
-                  />
-                </svg>
-              ))}
+            <div className="opacity-5">
+              <Image
+                src={"/Finaa-name.svg"}
+                width={500}
+                height={300}
+                alt=''
+              />
             </div>
           </div>
         </div>

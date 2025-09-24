@@ -139,7 +139,14 @@ export interface Project {
     id?: string | null;
   }[];
   categories: (number | Category)[];
-  status?: ('planning' | 'in-progress' | 'completed') | null;
+  location: string;
+  end_date?: string | null;
+  more_details?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   slug: string;
   updatedAt: string;
   createdAt: string;
@@ -170,8 +177,7 @@ export interface Media {
 export interface Category {
   id: number;
   name: string;
-  description?: string | null;
-  slug: string;
+  slug?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -181,10 +187,10 @@ export interface Category {
  */
 export interface Service {
   id: number;
-  name: string;
+  title: string;
   image: number | Media;
   description?: string | null;
-  slug: string;
+  slug?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -324,7 +330,14 @@ export interface ProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   categories?: T;
-  status?: T;
+  location?: T;
+  end_date?: T;
+  more_details?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -334,7 +347,7 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
-  name?: T;
+  title?: T;
   image?: T;
   description?: T;
   slug?: T;
@@ -359,7 +372,6 @@ export interface ContactUsSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   name?: T;
-  description?: T;
   slug?: T;
   updatedAt?: T;
   createdAt?: T;

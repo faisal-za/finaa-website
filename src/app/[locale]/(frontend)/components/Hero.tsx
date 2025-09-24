@@ -98,7 +98,7 @@ const Hero = () => {
 
             {/* Floating Elements */}
             <div className="absolute -top-10 right-10 w-20 h-20 border-4 border-[#9c5748] rounded-full"></div>
-            <div className="absolute -top-12 left-10 w-16 h-16 bg-[#302c30] rounded-full"></div>
+            <div className="absolute -top-12 left-10 w-16 h-16 bg-[#302c30] rounded-full opacity-5"></div>
 
             {/* Brand Text Overlay */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">

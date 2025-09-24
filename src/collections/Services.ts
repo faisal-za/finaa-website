@@ -13,11 +13,11 @@ export const Services: CollectionConfig = {
     },
   },
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: 'title',
   },
   fields: [
     {
-      name: 'name',
+      name: 'title',
       type: 'text',
       required: true,
       localized: true,
@@ -48,13 +48,13 @@ export const Services: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
-      required: true,
       unique: true,
       label: {
         en: 'Slug',
         ar: 'الرابط',
       },
       admin: {
+        readOnly: true,
         position: 'sidebar',
       },
     },
