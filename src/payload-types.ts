@@ -67,16 +67,24 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    projects: Project;
+    services: Service;
+    'contact-us': ContactUs;
+    categories: Category;
     media: Media;
+    users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -84,9 +92,13 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
-  locale: null;
+  globals: {
+    content: Content;
+  };
+  globalsSelect: {
+    content: ContentSelect<false> | ContentSelect<true>;
+  };
+  locale: 'en' | 'ar';
   user: User & {
     collection: 'users';
   };
@@ -115,6 +127,93 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  name: string;
+  description: string;
+  images: {
+    image: number | Media;
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  categories: (number | Category)[];
+  status?: ('planning' | 'in-progress' | 'completed') | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  description?: string | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  name: string;
+  image: number | Media;
+  description?: string | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-us".
+ */
+export interface ContactUs {
+  id: number;
+  name: string;
+  email?: string | null;
+  serviceType?:
+    | (
+        | 'residential-development'
+        | 'commercial-construction'
+        | 'project-management'
+        | 'architectural-design'
+        | 'renovation-remodeling'
+        | 'land-development'
+        | 'consultation-services'
+        | 'other'
+      )
+    | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -139,37 +238,34 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'contact-us';
+        value: number | ContactUs;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -215,6 +311,79 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  categories?: T;
+  status?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  name?: T;
+  image?: T;
+  description?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-us_select".
+ */
+export interface ContactUsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  serviceType?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -234,24 +403,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -284,6 +435,44 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content".
+ */
+export interface Content {
+  id: number;
+  services_section?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  projects_section?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content_select".
+ */
+export interface ContentSelect<T extends boolean = true> {
+  services_section?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  projects_section?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

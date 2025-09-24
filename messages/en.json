@@ -1,0 +1,153 @@
+{
+  "metadata": {
+    "title": "Finaa Design & Build - We Design and Build Your Future",
+    "description": "Finaa Design & Build - Leading company in real estate development and general contracting in Saudi Arabia",
+    "keywords": "real estate development, construction, architectural design, building, Saudi Arabia, contracting"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "projects": "Projects",
+    "whyUs": "Why Us",
+    "contact": "Contact Us",
+    "callUs": "Call Us"
+  },
+  "hero": {
+    "title": "We Design and Build",
+    "subtitle": "Your Future",
+    "description": "Finaa Design & Build provides comprehensive solutions in real estate development and general contracting with the highest standards of quality and professionalism",
+    "getQuote": "Get a Quote",
+    "viewProjects": "View Our Work",
+    "brandName": "Finaa",
+    "brandTagline": "Design & Build"
+  },
+  "services": {
+    "title": "Our Distinguished Services",
+    "subtitle": "We provide a comprehensive range of services in construction and real estate development",
+    "viewDetails": "View Details",
+    "architecturalDesign": {
+      "title": "Architectural Design",
+      "description": "Innovative architectural designs that combine beauty and functionality while considering local and cultural requirements"
+    },
+    "construction": {
+      "title": "Construction & Building",
+      "description": "Executing construction projects using the latest technologies and high-quality materials while ensuring adherence to specified deadlines"
+    },
+    "realEstateDevelopment": {
+      "title": "Real Estate Development",
+      "description": "Developing integrated real estate projects from planning and design to final delivery to clients"
+    },
+    "projectManagement": {
+      "title": "Project Management",
+      "description": "Specialized supervision of all project phases to ensure achieving the highest quality standards on time"
+    },
+    "consultation": {
+      "title": "Engineering Consultation",
+      "description": "Specialized technical consultations in architectural and structural engineering to ensure your project's success"
+    },
+    "interiorDesign": {
+      "title": "Interior Design",
+      "description": "Modern and functional interior designs that reflect your taste and meet your living and working needs"
+    }
+  },
+  "projects": {
+    "title": "Our Featured Projects",
+    "subtitle": "We are proud to present a diverse range of projects that reflect our expertise and creativity in construction and real estate development",
+    "projectDetails": "Project Details",
+    "categories": {
+      "all": "All",
+      "residential": "Residential",
+      "commercial": "Commercial",
+      "institutional": "Institutional",
+      "tourism": "Tourism"
+    }
+  },
+  "whyUs": {
+    "title": "Why Finaa?",
+    "subtitle": "We don't just build buildings, we create dreams and build the future",
+    "experience": {
+      "title": "Accumulated Experience",
+      "description": "Over 15 years of experience in executing diverse architectural projects from residential to commercial with the highest standards of quality and creativity"
+    },
+    "team": {
+      "title": "Specialized Team",
+      "description": "A team of professional engineers and architects working in harmony to achieve your vision and turn your dreams into tangible reality"
+    },
+    "commitment": {
+      "title": "Full Commitment",
+      "description": "We commit to specified deadlines and agreed budgets while ensuring complete transparency in all project phases"
+    },
+    "quality": {
+      "title": "Guaranteed Quality",
+      "description": "We use the latest technologies in design and construction with the best materials and modern tools to ensure exceptional results"
+    },
+    "stats": {
+      "founded": "Founded in",
+      "projects": "Completed Projects",
+      "team": "Team Members",
+      "satisfaction": "Client Satisfaction"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We are here to realize your dream of the perfect project. Contact us today and start your building journey",
+    "contactInfo": "Contact Information",
+    "sendMessage": "Send Message",
+    "phone": "Call Us",
+    "email": "Email",
+    "address": "Address",
+    "workingHours": "Working Hours",
+    "workingHoursDetails": "Sunday - Thursday: 8:00 AM - 6:00 PM, Friday: Closed",
+    "addressDetails": "Riyadh, Saudi Arabia, King Fahd District, King Abdulaziz Road",
+    "form": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "email": "Email",
+      "emailPlaceholder": "example@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+966 5X XXX XXXX",
+      "projectType": "Project Type",
+      "projectTypePlaceholder": "Select project type",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your project and what services you need from us",
+      "send": "Send",
+      "required": "*",
+      "validation": {
+        "nameRequired": "Name must be more than two characters",
+        "emailRequired": "Please enter a valid email",
+        "messageRequired": "Message must be more than 10 characters"
+      },
+      "projectTypes": {
+        "residential": "Residential",
+        "commercial": "Commercial",
+        "institutional": "Institutional",
+        "tourism": "Tourism",
+        "other": "Other"
+      }
+    }
+  },
+  "footer": {
+    "companyDescription": "Finaa Design & Build, a leading company in construction and real estate development with over 15 years of experience in realizing clients' dreams",
+    "quickLinks": "Quick Links",
+    "services": "Our Services",
+    "contactInfo": "Contact Information",
+    "servicesList": {
+      "architecturalDesign": "Architectural Design",
+      "construction": "Construction & Building",
+      "realEstateDevelopment": "Real Estate Development",
+      "projectManagement": "Project Supervision",
+      "consultation": "Engineering Consultation"
+    },
+    "copyright": "Finaa Design & Build. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsConditions": "Terms & Conditions"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "close": "Close",
+    "open": "Open",
+    "menu": "Menu"
+  }
+}

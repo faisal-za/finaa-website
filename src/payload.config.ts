@@ -2,6 +2,7 @@
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -9,6 +10,15 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { ContactUs } from './collections/ContactUs'
+import { Categories } from './collections/Categories'
+import { Projects } from './collections/Projects'
+import { Services } from './collections/Services'
+
+import { Content } from './globals/Content'
+
+import { ar } from '@payloadcms/translations/languages/ar'
+import { en } from '@payloadcms/translations/languages/en'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -20,7 +30,35 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  i18n: {
+    supportedLanguages: { en, ar },
+  },
+  localization: {
+    locales: [
+      {
+        label: 'English',
+        code: 'en',
+      },
+      {
+        label: 'Arabic',
+        code: 'ar',
+        rtl: true,
+      },
+    ],
+    defaultLocale: 'en', // required
+    fallback: true, // defaults to true
+  },
+  collections: [
+    Projects,
+    Services,
+    ContactUs,
+    Categories,
+    Media,
+    Users,
+  ],
+  globals: [
+    Content
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -34,6 +72,14 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
+    vercelBlobStorage({
+      enabled: true,
+      collections: {
+        media: true
+      },
+      // Token provided by Vercel once Blob storage is added to your Vercel project
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
     // storage-adapter-placeholder
   ],
 })
