@@ -44,11 +44,3 @@ body {
 }
 .scroll-stack-root::-webkit-scrollbar { display: none; } /* WebKit */
 
-.scroll-stack-item {
-  contain: layout paint;
-  will-change: transform;
-  /* Very short transition for smooth scaling without bumping */
-  transition: transform 50ms ease-out, filter 200ms ease-out;
-}
-
-

@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
+import {  Building, Hammer, MapPin, Clipboard, MessageSquare, Palette } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 interface ServiceCardProps {
@@ -22,22 +22,37 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
   const colors = ['#9c5748', '#505248', '#302c30']
   const accentColor = colors[index % colors.length]
 
+  // Get appropriate icon for each service
+  const getServiceIcon = (serviceId: string) => {
+    const iconProps = { size: 32, color: 'white' }
+
+    switch (serviceId) {
+      case 'architecturalDesign':
+        return <Building {...iconProps} />
+      case 'construction':
+        return <Hammer {...iconProps} />
+      case 'realEstateDevelopment':
+        return <MapPin {...iconProps} />
+      case 'projectManagement':
+        return <Clipboard {...iconProps} />
+      case 'consultation':
+        return <MessageSquare {...iconProps} />
+      case 'interiorDesign':
+        return <Palette {...iconProps} />
+      default:
+        return <Building {...iconProps} />
+    }
+  }
+
   return (
-    <Link href={`/services/${service.id}`} className="group block h-full">
+    <Link href={`/services/${service.id}`} className="group block">
       <div
-        className=" bg-white p-8 h-full"
+        className=" bg-white p-4 lg:p-6"
         style={{
           clipPath: 'polygon(3% 0, 100% 0, 100% 85%, 97% 100%, 0 100%, 0 15%)',
         }}
       >
-        {/* Geometric accent */}
-        <div
-          className={`absolute top-0 w-8 h-8 ${locale === 'ar' ? 'left-0' : 'right-0'}`}
-          style={{
-            backgroundColor: accentColor,
-            clipPath: locale === 'ar' ? 'polygon(0 0, 100% 0, 0 100%)' : 'polygon(0 0, 100% 0, 100% 100%)'
-          }}
-        />
+
 
         {/* Blueprint grid pattern background */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -70,9 +85,9 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
         {/* Content Container */}
         <div className=" z-10 h-full flex flex-col">
           {/* Service Visual */}
-          <div className="mb-6">
+          <div className="mb-3 lg:mb-4">
             {service.image?.url ? (
-              <div className=" aspect-[4/3] rounded-lg">
+              <div className="relative aspect-[2/1] lg:aspect-[3/1] rounded-lg overflow-hidden">
                 <Image
                   src={service.image.url}
                   alt={service.image.alt || service.name}
@@ -83,8 +98,8 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
               </div>
             ) : (
               /* Enhanced Geometric Pattern Placeholder */
-              <div className="relative aspect-[4/3] rounded-lg  bg-gradient-to-br from-[#f7f2ee] to-white">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+              <div className="relative aspect-[2/1] lg:aspect-[3/1] rounded-lg overflow-hidden bg-gradient-to-br from-[#f7f2ee] to-white">
+                <svg className="w-full h-full" >
                   <defs>
                     <pattern id={`pattern-${index}`} x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
                       <polygon points="15,0 30,15 15,30 0,15" fill={accentColor} opacity="0.1" />
@@ -95,29 +110,20 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
                       <line x1="10" y1="0" x2="10" y2="20" stroke={accentColor} strokeWidth="0.5" opacity="0.3" />
                     </pattern>
                   </defs>
-                  <rect width="200" height="200" fill={`url(#pattern-${index})`} />
-                  <rect width="200" height="200" fill={`url(#lines-${index})`} />
+                  <rect width="1000" height="500" fill={`url(#pattern-${index})`} />
+                  <rect width="1000" height="500" fill={`url(#lines-${index})`} />
                 </svg>
 
-                {/* Service Icon/Letter with architectural styling */}
+                {/* Service Icon with architectural styling */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
                     <div
                       className="w-20 h-20 rounded-lg flex items-center justify-center text-white text-3xl font-bold transform transition-all duration-300 group-hover:scale-110"
                       style={{ backgroundColor: accentColor }}
                     >
-                      {service.name.charAt(0)}
+                      {getServiceIcon(service.id)}
                     </div>
-                    {/* Small accent line */}
-                    <div
-                      className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-8 h-0.5 transition-all duration-300 group-hover:w-12"
-                      style={{ backgroundColor: accentColor }}
-                    />
                   </div>
-                </div>
-
-                {/* Hover effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#302c30]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
                 </div>
               </div>
             )}

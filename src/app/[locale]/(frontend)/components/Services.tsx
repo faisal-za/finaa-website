@@ -10,7 +10,6 @@ interface ServicesProps {
 
 const Services = ({ services }: ServicesProps) => {
   const t = useTranslations('services')
-
   // Static services as fallback if no data from CMS
   const defaultServices = [
     {
@@ -48,8 +47,8 @@ const Services = ({ services }: ServicesProps) => {
   const displayServices = services.length > 0 ? services : defaultServices
 
   return (
-    <section id="services" className="py-20 lg:py-32 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-36 lg:py-32 bg-white">
+      <div className="container mx-auto px-4 sm:px-0 lg:px-8">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-16">
           <div className="flex items-center justify-center gap-4 mb-6">
@@ -68,18 +67,19 @@ const Services = ({ services }: ServicesProps) => {
         </div>
 
         {/* Services Stack */}
-        <div className=" h-full ">
+        <div className="h-screen ">
           <ScrollStack
-            useWindowScroll={true}
-            itemStackDistance={90}
+            itemStackDistance={30}
             stackPosition="10%"
-            scaleEndPosition="50%"
+            scaleEndPosition="100%"
+            scaleDuration={3}
             baseScale={0.95}
             itemScale={0.02}
-            blurAmount={5}
-            className=""
+            blurAmount={1}
+            enableScrollChaining={true}
+            className="scroll-stack-root"
           >
-            {displayServices.slice(0, 4).map((service, index) => (
+            {displayServices.map((service, index) => (
               <ScrollStackItem
                 key={service.id}
                 itemClassName="bg-white border border-gray-100 scroll-stack-item"

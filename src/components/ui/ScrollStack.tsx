@@ -9,7 +9,7 @@ export interface ScrollStackItemProps {
 
 export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({ children, itemClassName = '' }) => (
   <div
-    className={`scroll-stack-card relative w-full h-80 my-8 p-12 shadow-[0_0_30px_rgba(0,0,0,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
+    className={`scroll-stack-card relative w-full max-w-2xl lg:max-w-4xl mx-auto my-8 shadow-[0_0_30px_rgba(0,0,0,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
     style={{
       backfaceVisibility: 'hidden',
       transformStyle: 'preserve-3d'
@@ -33,6 +33,7 @@ interface ScrollStackProps {
   blurAmount?: number;
   useWindowScroll?: boolean;
   onStackComplete?: () => void;
+  enableScrollChaining?: boolean;
 }
 
 const ScrollStack: React.FC<ScrollStackProps> = ({
@@ -48,11 +49,14 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = false,
-  onStackComplete
+  onStackComplete,
+  enableScrollChaining = false
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
+  const scrollChainingRef = useRef(false);
+  const lastScrollTopRef = useRef(0);
   const lenisRef = useRef<Lenis | null>(null);
   const cardsRef = useRef<HTMLElement[]>([]);
   const lastTransformsRef = useRef(new Map<number, any>());
@@ -208,9 +212,67 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     getElementOffset
   ]);
 
+  // Scroll chaining handler - bidirectional
+  const handleScrollChaining = useCallback((scroller: HTMLElement) => {
+    if (!enableScrollChaining) return;
+
+    const scrollTop = scroller.scrollTop;
+    const scrollHeight = scroller.scrollHeight;
+    const clientHeight = scroller.clientHeight;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
+    const isAtTop = scrollTop <= 10; // 10px tolerance from top
+    const scrollDirection = scrollTop > lastScrollTopRef.current ? 'down' : 'up';
+
+    // Forward scroll chaining (down) - reaches bottom
+    if (isAtBottom && scrollDirection === 'down' && !scrollChainingRef.current) {
+      scrollChainingRef.current = true;
+
+      const servicesSection = document.getElementById('services');
+      if (servicesSection) {
+        const nextSection = servicesSection.nextElementSibling as HTMLElement;
+        if (nextSection) {
+          nextSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+
+      setTimeout(() => {
+        scrollChainingRef.current = false;
+      }, 1000);
+    }
+
+    // Backward scroll chaining (up) - reaches top
+    if (isAtTop && scrollDirection === 'up' && !scrollChainingRef.current) {
+      scrollChainingRef.current = true;
+
+      const servicesSection = document.getElementById('services');
+      if (servicesSection) {
+        const prevSection = servicesSection.previousElementSibling as HTMLElement;
+        if (prevSection) {
+          prevSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end'
+          });
+        }
+      }
+
+      setTimeout(() => {
+        scrollChainingRef.current = false;
+      }, 1000);
+    }
+
+    lastScrollTopRef.current = scrollTop;
+  }, [enableScrollChaining]);
+
   const handleScroll = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (scroller) {
+      handleScrollChaining(scroller);
+    }
     updateCardTransforms();
-  }, [updateCardTransforms]);
+  }, [updateCardTransforms, handleScrollChaining]);
 
   const setupLenis = useCallback(() => {
     if (useWindowScroll) {
@@ -320,6 +382,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     blurAmount,
     useWindowScroll,
     onStackComplete,
+    enableScrollChaining,
     setupLenis,
     updateCardTransforms
   ]);

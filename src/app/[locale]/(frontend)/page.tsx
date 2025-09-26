@@ -14,7 +14,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white">
+      <main className=" bg-white">
         <Hero />
         <Services services={services} />
         <Projects projects={projects} />
