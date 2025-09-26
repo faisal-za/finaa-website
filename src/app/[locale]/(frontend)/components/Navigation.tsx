@@ -36,7 +36,7 @@ const Navigation = () => {
 
   const handleLanguageSwitch = useCallback(() => {
     const newLocale = locale === 'ar' ? 'en' : 'ar'
-    router.replace(pathname, {locale: newLocale})
+    router.replace(pathname, { locale: newLocale })
   }, [locale, pathname, router])
 
   const navLinks = useMemo(() => [
@@ -74,10 +74,16 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg py-3'
-          : 'bg-white/80 backdrop-blur-sm py-4'
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-white shadow-lg py-3'
+          : 'bg-white py-4'
           }`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          zIndex: 50,
+          width: '100%',
+        }}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -153,11 +159,10 @@ const Navigation = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-20 left-4 right-4 bg-white rounded-2xl shadow-2xl z-50 transition-all duration-300 lg:hidden ${
-          isMobileMenuOpen
-            ? 'opacity-100 scale-100 translate-y-0'
-            : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
-        }`}
+        className={`fixed top-20 left-4 right-4 bg-white rounded-2xl shadow-2xl z-50 transition-all duration-300 lg:hidden ${isMobileMenuOpen
+          ? 'opacity-100 scale-100 translate-y-0'
+          : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
+          }`}
       >
         <div className="p-6">
           <div className="flex flex-col gap-4">
@@ -166,11 +171,10 @@ const Navigation = () => {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className={`text-lg text-[#302c30] hover:text-[#9c5748] transition-all font-medium cursor-pointer py-2 px-3 rounded-lg hover:bg-[#f7f2ee] transform transition-all duration-300 ${
-                  isMobileMenuOpen
-                    ? 'opacity-100 translate-x-0'
-                    : 'opacity-0 translate-x-4'
-                }`}
+                className={`text-lg text-[#302c30] hover:text-[#9c5748] transition-all font-medium cursor-pointer py-2 px-3 rounded-lg hover:bg-[#f7f2ee] transform transition-all duration-300 ${isMobileMenuOpen
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 translate-x-4'
+                  }`}
                 style={{
                   transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
                 }}

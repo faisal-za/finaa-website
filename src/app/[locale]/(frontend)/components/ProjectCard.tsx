@@ -40,14 +40,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const onSelect = useCallback(() => {
     if (!mainApi || !thumbnailApi) return
     const newIndex = mainApi.selectedScrollSnap()
-    console.log('Carousel Selection:', {
-      newIndex,
-      totalImages: images.length,
-      selectedImageUrl: images[newIndex]?.image?.url
-    })
+
     setCurrent(newIndex)
     thumbnailApi.scrollTo(newIndex)
-  }, [mainApi, thumbnailApi, images])
+  }, [mainApi, thumbnailApi])
 
   useEffect(() => {
     if (!mainApi) return

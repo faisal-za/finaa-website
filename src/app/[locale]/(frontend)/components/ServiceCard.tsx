@@ -25,7 +25,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
   return (
     <Link href={`/services/${service.id}`} className="group block h-full">
       <div
-        className="relative bg-white p-8 h-full transition-all duration-500 hover:shadow-2xl group"
+        className=" bg-white p-8 h-full"
         style={{
           clipPath: 'polygon(3% 0, 100% 0, 100% 85%, 97% 100%, 0 100%, 0 15%)',
         }}
@@ -68,11 +68,11 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
         </div>
 
         {/* Content Container */}
-        <div className="relative z-10 h-full flex flex-col">
+        <div className=" z-10 h-full flex flex-col">
           {/* Service Visual */}
           <div className="mb-6">
             {service.image?.url ? (
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+              <div className=" aspect-[4/3] rounded-lg">
                 <Image
                   src={service.image.url}
                   alt={service.image.alt || service.name}
@@ -80,15 +80,10 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#302c30]/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                  <div className="absolute bottom-4 right-4">
-                    <ArrowUpRight className="w-6 h-6 text-white" />
-                  </div>
-                </div>
               </div>
             ) : (
               /* Enhanced Geometric Pattern Placeholder */
-              <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gradient-to-br from-[#f7f2ee] to-white">
+              <div className="relative aspect-[4/3] rounded-lg  bg-gradient-to-br from-[#f7f2ee] to-white">
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
                   <defs>
                     <pattern id={`pattern-${index}`} x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">

@@ -1,10 +1,8 @@
 import ServiceCard from './ServiceCard'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import ScrollStack, { ScrollStackItem } from '@/components/ui/ScrollStack'
 
 interface ServicesProps {
   services: any[]
@@ -69,11 +67,27 @@ const Services = ({ services }: ServicesProps) => {
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {displayServices.slice(0, 6).map((service, index) => (
-            <ServiceCard key={service.id} service={service} index={index} />
-          ))}
+        {/* Services Stack */}
+        <div className=" h-full ">
+          <ScrollStack
+            useWindowScroll={true}
+            itemStackDistance={90}
+            stackPosition="10%"
+            scaleEndPosition="50%"
+            baseScale={0.95}
+            itemScale={0.02}
+            blurAmount={5}
+            className=""
+          >
+            {displayServices.slice(0, 4).map((service, index) => (
+              <ScrollStackItem
+                key={service.id}
+                itemClassName="bg-white border border-gray-100 scroll-stack-item"
+              >
+                <ServiceCard service={service} index={index} />
+              </ScrollStackItem>
+            ))}
+          </ScrollStack>
         </div>
 
         {/* CTA Section */}
