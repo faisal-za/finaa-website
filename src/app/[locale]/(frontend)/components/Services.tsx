@@ -18,11 +18,6 @@ const Services = ({ services }: ServicesProps) => {
       description: t('architecturalDesign.description'),
     },
     {
-      id: 'construction',
-      name: t('construction.title'),
-      description: t('construction.description'),
-    },
-    {
       id: 'realEstateDevelopment',
       name: t('realEstateDevelopment.title'),
       description: t('realEstateDevelopment.description'),
@@ -31,11 +26,6 @@ const Services = ({ services }: ServicesProps) => {
       id: 'projectManagement',
       name: t('projectManagement.title'),
       description: t('projectManagement.description'),
-    },
-    {
-      id: 'consultation',
-      name: t('consultation.title'),
-      description: t('consultation.description'),
     },
     {
       id: 'interiorDesign',
