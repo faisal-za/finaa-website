@@ -2,8 +2,6 @@ import ServiceCard from './ServiceCard'
 import { Separator } from '@/components/ui/separator'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import ScrollStack, { ScrollStackItem } from '@/components/ui/ScrollStack'
-
 interface ServicesProps {
   services: any[]
 }
@@ -56,28 +54,13 @@ const Services = ({ services }: ServicesProps) => {
           </p>
         </div>
 
-        {/* Services Stack */}
-        <div className="h-screen ">
-          <ScrollStack
-            itemStackDistance={30}
-            stackPosition="10%"
-            scaleEndPosition="100%"
-            scaleDuration={3}
-            baseScale={0.95}
-            itemScale={0.02}
-            blurAmount={1}
-            enableScrollChaining={true}
-            className="scroll-stack-root"
-          >
-            {displayServices.map((service, index) => (
-              <ScrollStackItem
-                key={service.id}
-                itemClassName="bg-white border border-gray-100 scroll-stack-item"
-              >
-                <ServiceCard service={service} index={index} />
-              </ScrollStackItem>
-            ))}
-          </ScrollStack>
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
+          {displayServices.map((service, index) => (
+            <div key={service.id} className="bg-white border border-gray-100">
+              <ServiceCard service={service} index={index} />
+            </div>
+          ))}
         </div>
 
         {/* CTA Section */}

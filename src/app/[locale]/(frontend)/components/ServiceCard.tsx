@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import {  Building, Hammer, MapPin, Clipboard, MessageSquare, Palette } from 'lucide-react'
+import { Building, Hammer, MapPin, Clipboard, MessageSquare, Palette } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 interface ServiceCardProps {
@@ -46,15 +46,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
 
   return (
     <Link href={`/services/${service.id}`} className="group block">
-      <div
-        className=" bg-white p-4 lg:p-6"
-        style={{
-          clipPath: 'polygon(3% 0, 100% 0, 100% 85%, 97% 100%, 0 100%, 0 15%)',
-        }}
-      >
-
-
-        {/* Blueprint grid pattern background */}
+      <div className=" bg-white p-4 lg:p-6 " style={{ clipPath: 'polygon(3% 0, 100% 0, 100% 85%, 97% 100%, 0 100%, 0 15%)' }}>
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           {[...Array(6)].map((_, i) => (
             <div
@@ -98,7 +90,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
               </div>
             ) : (
               /* Enhanced Geometric Pattern Placeholder */
-              <div className="relative aspect-[2/1] lg:aspect-[3/1] rounded-lg overflow-hidden bg-gradient-to-br from-[#f7f2ee] to-white">
+              <div className="relative aspect-[2/1] lg:aspect-[3/1]  overflow-hidden bg-gradient-to-br from-[#f7f2ee] to-white">
                 <svg className="w-full h-full" >
                   <defs>
                     <pattern id={`pattern-${index}`} x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
@@ -118,8 +110,9 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
                     <div
-                      className="w-20 h-20 rounded-lg flex items-center justify-center text-white text-3xl font-bold transform transition-all duration-300 group-hover:scale-110"
-                      style={{ backgroundColor: accentColor }}
+                      className="w-20 h-20 flex items-center justify-center text-white text-3xl font-bold transform transition-all duration-300 group-hover:scale-110"
+                      style={{ clipPath: 'polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%)', backgroundColor: accentColor }}
+
                     >
                       {getServiceIcon(service.id)}
                     </div>

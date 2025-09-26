@@ -3,6 +3,7 @@
 import React from 'react'
 import { Award, Users, Clock, Shield } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
+import CountUp from '@/components/ui/CountUp'
 
 const WhyUs = () => {
   const locale = useLocale()
@@ -146,29 +147,44 @@ const WhyUs = () => {
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               {
-                value: locale === 'ar' ? '٢٠٢٤' : '2024',
+                type: 'year',
+                value: 2024,
                 label: t('stats.founded'),
                 accent: 'founded'
               },
               {
-                value: locale === 'ar' ? '+١٥٠' : '150+',
+                type: 'projects',
+                value: 150,
+                suffix: '+',
                 label: t('stats.projects'),
                 accent: 'projects'
               },
               {
-                value: locale === 'ar' ? '+٥٠' : '50+',
+                type: 'team',
+                value: 50,
+                suffix: '+',
                 label: t('stats.team'),
                 accent: 'team'
               },
               {
-                value: locale === 'ar' ? '%٩٨' : '98%',
+                type: 'percentage',
+                value: 98,
+                prefix: '%',
                 label: t('stats.satisfaction'),
                 accent: 'satisfaction'
               }
             ].map((stat, index) => (
               <div key={index} className="group">
-                <div className="text-3xl lg:text-4xl font-bold text-[#9c5748] mb-3 group-hover:scale-110 transition-all duration-300">
-                  {stat.value}
+                <div className="text-3xl lg:text-4xl font-bold text-[#9c5748] mb-3 group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+                  {stat.prefix && <span>{stat.prefix}</span>}
+                  <CountUp
+                    from={0}
+                    to={stat.value}
+                    duration={1.5}
+                    delay={index * 0.2}
+                    locale={locale === 'ar' ? 'ar-SA' : 'en-US'}
+                  />
+                  {stat.suffix && <span>{stat.suffix}</span>}
                 </div>
                 <div className="text-[#505248] text-base lg:text-lg font-medium">{stat.label}</div>
                 <div className="w-8 h-0.5 bg-[#9c5748] mx-auto mt-3 opacity-60 group-hover:opacity-100 group-hover:w-12 transition-all duration-300"></div>

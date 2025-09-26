@@ -159,7 +159,7 @@ const Navigation = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-20 left-4 right-4 bg-white rounded-2xl shadow-2xl z-50 transition-all duration-300 lg:hidden ${isMobileMenuOpen
+        className={`fixed top-22 left-4 right-4 bg-white rounded-2xl shadow-2xl z-50 transition-all duration-300 lg:hidden ${isMobileMenuOpen
           ? 'opacity-100 scale-100 translate-y-0'
           : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
           }`}

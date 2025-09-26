@@ -10,6 +10,7 @@ interface CountUpProps {
   className?: string;
   startWhen?: boolean;
   separator?: string;
+  locale?: string;
   onStart?: () => void;
   onEnd?: () => void;
 }
@@ -23,6 +24,7 @@ export default function CountUp({
   className = '',
   startWhen = true,
   separator = '',
+  locale = 'en-US',
   onStart,
   onEnd
 }: CountUpProps) {
@@ -95,7 +97,7 @@ export default function CountUp({
           maximumFractionDigits: hasDecimals ? maxDecimals : 0
         };
 
-        const formattedNumber = Intl.NumberFormat('en-US', options).format(latest);
+        const formattedNumber = Intl.NumberFormat(locale, options).format(latest);
 
         ref.current.textContent = separator ? formattedNumber.replace(/,/g, separator) : formattedNumber;
       }

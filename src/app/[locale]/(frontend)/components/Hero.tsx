@@ -44,7 +44,7 @@ const Hero = () => {
           {/* Content Section */}
           <div className="flex flex-col justify-center py-8 lg:py-12 space-y-6 sm:space-y-8">
             <div className="space-y-4 sm:space-y-6">
-              <h1 className=" gap-x-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#302c30] leading-tight">
+              <h1 className="flex flex-row xl:flex-col gap-x-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#302c30] leading-tight">
                 {t('title')}
                 <span className="block text-[#9c5748] mt-1 sm:mt-2">{t('subtitle')}</span>
               </h1>
@@ -77,26 +77,28 @@ const Hero = () => {
             {/* Stats Grid */}
             <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 border-t border-gray-200">
               <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
-                <div className="flex flex-row items-center text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
+                <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
                   <CountUp
                     from={0}
                     to={120}
                     separator=","
                     direction="up"
-                    duration={0.5} />
+                    duration={0.5}
+                    locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
                   <p>+</p>
                 </div>
                 <div className="text-xs sm:text-sm text-[#505248] mt-1">{statsT('projects')}</div>
               </div>
               <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                  <div className="flex flex-row items-center text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
+                  <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
                     <CountUp
                       from={0}
                       to={50}
                       separator=","
                       direction="up"
-                      duration={1} />
+                      duration={1}
+                      locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
                     <p>+</p>
                   </div>
                 </div>
@@ -104,14 +106,15 @@ const Hero = () => {
               </div>
               <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                  <div className="flex flex-row items-center text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
+                  <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
                     <p>%</p>
                     <CountUp
                       from={0}
                       to={98}
                       separator=","
                       direction="up"
-                      duration={1} />
+                      duration={1}
+                      locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
                     <p>+</p>
                   </div>
                 </div>
