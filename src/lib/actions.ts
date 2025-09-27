@@ -102,8 +102,8 @@ function sanitizeInput(input: string): string {
     .replace(/\s+/g, ' ') // Normalize whitespace
 }
 
-function getClientIP(): string {
-  const headersList = headers()
+async function getClientIP(): Promise<string> {
+  const headersList = await headers()
   const forwardedFor = headersList.get('x-forwarded-for')
   const realIP = headersList.get('x-real-ip')
 
@@ -127,7 +127,7 @@ export async function submitContactForm(formData: {
 }) {
   try {
     // Get client IP for rate limiting
-    const clientIP = getClientIP()
+    const clientIP = await getClientIP()
 
     // Rate limiting checks
     try {
@@ -205,11 +205,12 @@ export async function submitContactForm(formData: {
     const payload = await getPayload({ config: payloadConfig })
 
     // Store form submission with metadata
+    const headersList = await headers()
     const submissionData = {
       ...sanitizedData,
       submittedAt: new Date(),
       clientIP: clientIP,
-      userAgent: headers().get('user-agent') || 'unknown',
+      userAgent: headersList.get('user-agent') || 'unknown',
       verified: false,
     }
 
