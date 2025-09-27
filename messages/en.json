@@ -38,7 +38,7 @@
       "description": "Developing integrated real estate projects from planning and design to final delivery to clients"
     },
     "projectManagement": {
-      "title": "Project Management",
+      "title": "Engineering Supervision",
       "description": "Specialized supervision of all project phases to ensure achieving the highest quality standards on time"
     },
     "consultation": {
@@ -135,7 +135,7 @@
       "architecturalDesign": "Architectural Design",
       "construction": "Construction & Building",
       "realEstateDevelopment": "Real Estate Development",
-      "projectManagement": "Project Supervision",
+      "projectManagement": "Engineering Supervision",
       "consultation": "Engineering Consultation"
     },
     "copyright": "Finaa Design & Build. All rights reserved.",
