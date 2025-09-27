@@ -154,7 +154,7 @@ export async function submitContactForm(formData: {
       return {
         success: false,
         error: 'Invalid form data',
-        validationErrors: validationResult.error.errors
+        validationErrors: validationResult.error.issues
       }
     }
 
