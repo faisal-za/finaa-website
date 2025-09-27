@@ -176,7 +176,7 @@ const WhyUs = () => {
                   ) : (
                     <CountUp
                       from={0}
-                      to={stat.value}
+                      to={typeof stat.value === 'number' ? stat.value : 0}
                       duration={1}
                       delay={index * 0.2}
                       locale={locale === 'ar' ? 'ar-SA' : 'en-US'}
