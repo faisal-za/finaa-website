@@ -17,12 +17,10 @@ const Footer = () => {
     { label: navT('services'), href: '#services' },
     { label: navT('projects'), href: '#projects' },
     { label: navT('whyUs'), href: '#why-us' },
-    { label: navT('contact'), href: '#contact' }
   ]
 
   const services = [
     t('servicesList.architecturalDesign'),
-    t('servicesList.construction'),
     t('servicesList.realEstateDevelopment'),
     t('servicesList.projectManagement'),
     t('servicesList.consultation')
@@ -120,30 +118,43 @@ const Footer = () => {
           {/* Contact Info */}
           <div>
             <h3 className="text-xl font-bold mb-6 relative">
-              {""}
+              {locale === 'ar' ? 'تواصل معنا' : 'Contact Us'}
               <div className={`absolute -bottom-2 w-12 h-0.5 bg-[#9c5748] ${locale === 'ar' ? 'right-0' : 'left-0'}`}></div>
             </h3>
             <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#9c5748] mt-1 flex-shrink-0" />
-                <div className="text-gray-300">
-                  <p></p>
+              <a
+                href="https://maps.google.com/?q=Riyadh,+Saudi+Arabia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
+              >
+                <MapPin className="w-5 h-5 text-[#9c5748] mt-1 flex-shrink-0 group-hover:text-white" />
+                <div>
+                  <p>{locale === 'ar' ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia'}</p>
                 </div>
-              </div>
+              </a>
 
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-[#9c5748] flex-shrink-0" />
-                <div className="text-gray-300">
-                  <p>+966 50 123 4567</p>
+              <a
+                href="https://wa.me/966501234567"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
+              >
+                <Phone className="w-5 h-5 text-[#9c5748] flex-shrink-0 group-hover:text-white" />
+                <div>
+                  <p dir="ltr">+966 50 123 4567</p>
                 </div>
-              </div>
+              </a>
 
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-[#9c5748] flex-shrink-0" />
-                <div className="text-gray-300">
+              <a
+                href="mailto:info@finaa.sa"
+                className="flex items-center gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
+              >
+                <Mail className="w-5 h-5 text-[#9c5748] flex-shrink-0 group-hover:text-white" />
+                <div>
                   <p>info@finaa.sa</p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>

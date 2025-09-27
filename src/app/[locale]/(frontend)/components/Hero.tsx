@@ -23,7 +23,7 @@ const Hero = () => {
     }
   }
   return (
-    <FadeContent blur={true} duration={800} easing="ease-out" initialOpacity={0}>
+    <FadeContent blur={true} duration={300} easing="ease-out" initialOpacity={0}>
       <section id="hero" className="relative bg-gradient-to-b from-[#f7f2ee] mt-18 to-white overflow-hidden">
         {/* Geometric Pattern Background */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -38,22 +38,19 @@ const Hero = () => {
             </svg>
           </div>
         </div>
-
         {/* Hero Grid */}
-        <div className="container grid grid-cols-1 xl:grid-cols-2 mx-auto w-full px-4 sm:px-6 lg:px-8  sm:mt-36">
+        <div className="container grid grid-cols-1 xl:grid-cols-2 mx-auto w-full px-4 sm:px-6 lg:px-8 sm:mt-36">
           {/* Content Section */}
-          <div className="flex flex-col justify-center py-8 lg:py-12 space-y-6 sm:space-y-8">
+          <div className="flex flex-col justify-center py-8 lg:py-12 pb-8 space-y-12 sm:space-y-8">
             <div className="space-y-4 sm:space-y-6">
-              <h1 className="flex flex-row xl:flex-col gap-x-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#302c30] leading-tight">
+              <h1 className="flex flex-col xl:flex-col gap-x-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#302c30] leading-tight">
                 {t('title')}
                 <span className="block text-[#9c5748] mt-1 sm:mt-2">{t('subtitle')}</span>
               </h1>
-
               <p className="text-base sm:text-lg lg:text-xl text-[#505248] leading-relaxed max-w-lg">
                 {t('description')}
               </p>
             </div>
-
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button
@@ -75,7 +72,7 @@ const Hero = () => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 border-t border-gray-200">
+            <div className="grid grid-cols-3 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 border-t border-gray-200">
               <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
                 <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
                   <CountUp
@@ -87,7 +84,7 @@ const Hero = () => {
                     locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
                   <p>+</p>
                 </div>
-                <div className="text-xs sm:text-sm text-[#505248] mt-1">{statsT('projects')}</div>
+                <div className="text-sm  text-[#505248] mt-1">{statsT('projects')}</div>
               </div>
               <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
@@ -102,7 +99,7 @@ const Hero = () => {
                     <p>+</p>
                   </div>
                 </div>
-                <div className="text-xs sm:text-sm text-[#505248] mt-1">{statsT('team')}</div>
+                <div className="text-sm sm:text-sm text-[#505248] mt-1">{statsT('team')}</div>
               </div>
               <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
@@ -118,7 +115,7 @@ const Hero = () => {
                     <p>+</p>
                   </div>
                 </div>
-                <div className="text-xs sm:text-sm text-[#505248] mt-1">{statsT('satisfaction')}</div>
+                <div className="text-sm sm:text-sm text-[#505248] mt-1">{statsT('satisfaction')}</div>
               </div>
             </div>
           </div>

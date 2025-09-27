@@ -10,7 +10,7 @@
     "projects": "Projects",
     "whyUs": "Why Us",
     "contact": "Contact Us",
-    "callUs": "Call Us"
+    "contactUs": "Contact Us"
   },
   "hero": {
     "title": "We Design and Build",
@@ -82,9 +82,9 @@
       "description": "We use the latest technologies in design and construction with the best materials and modern tools to ensure exceptional results"
     },
     "stats": {
-      "founded": "Founded in",
-      "projects": "Completed Projects",
-      "team": "Team Members",
+      "support": "Available Support",
+      "projects": "Projects",
+      "team": "Work Force",
       "satisfaction": "Client Satisfaction"
     }
   },

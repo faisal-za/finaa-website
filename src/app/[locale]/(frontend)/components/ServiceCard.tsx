@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { Building, Hammer, MapPin, Clipboard, MessageSquare, Palette } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
@@ -45,7 +44,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
   }
 
   return (
-    <Link href={`/services/${service.id}`} className="group block">
+    <div className="group block">
       <div className=" bg-white p-4 lg:p-6 " style={{ clipPath: 'polygon(3% 0, 100% 0, 100% 85%, 97% 100%, 0 100%, 0 15%)' }}>
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           {[...Array(6)].map((_, i) => (
@@ -136,7 +135,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
             </div>
 
             {service.description && (
-              <p className="text-[#505248] text-sm lg:text-base leading-relaxed flex-1">
+              <p className="text-[#505248] lg:text-base leading-relaxed flex-1">
                 {service.description}
               </p>
             )}
@@ -144,7 +143,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
 

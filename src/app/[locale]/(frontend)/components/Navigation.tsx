@@ -124,10 +124,10 @@ const Navigation = () => {
 
               <Button
                 variant="outline"
-                className="border-[#302c30] text-[#302c30] hover:bg-[#302c30] hover:text-white"
+                className="border-[#302c30]  text-[#302c30] hover:bg-[#302c30] hover:text-white"
               >
-                <Phone className={`w-4 h-4 ${locale === 'ar' ? 'ml-2' : 'mr-2'}`} />
-                {t('callUs')}
+                <Phone className={`w-4 h-4 `} />
+                {t('contactUs')}
               </Button>
             </div>
 
@@ -171,7 +171,7 @@ const Navigation = () => {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className={`text-lg text-[#302c30] hover:text-[#9c5748] transition-all font-medium cursor-pointer py-2 px-3 rounded-lg hover:bg-[#f7f2ee] transform transition-all duration-300 ${isMobileMenuOpen
+                className={`text-lg text-[#302c30] hover:text-[#9c5748] font-medium cursor-pointer py-2 px-3 rounded-lg hover:bg-[#f7f2ee] transform transition-all duration-300 ${isMobileMenuOpen
                   ? 'opacity-100 translate-x-0'
                   : 'opacity-0 translate-x-4'
                   }`}
@@ -203,7 +203,7 @@ const Navigation = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <Phone className={`w-4 h-4 ${locale === 'ar' ? 'ml-2' : 'mr-2'}`} />
-              {t('callUs')}
+              {t('contactUs')}
             </Button>
           </div>
         </div>

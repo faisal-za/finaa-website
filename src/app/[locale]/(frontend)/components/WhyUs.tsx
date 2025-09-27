@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Award, Users, Clock, Shield } from 'lucide-react'
+import { Users, Clock, Shield } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import CountUp from '@/components/ui/CountUp'
 
@@ -11,24 +11,18 @@ const WhyUs = () => {
   const reasons = [
     {
       number: locale === 'ar' ? '٠١' : '01',
-      icon: Award,
-      title: t('experience.title'),
-      description: t('experience.description')
-    },
-    {
-      number: locale === 'ar' ? '٠٢' : '02',
       icon: Users,
       title: t('team.title'),
       description: t('team.description')
     },
     {
-      number: locale === 'ar' ? '٠٣' : '03',
+      number: locale === 'ar' ? '٠٢' : '02',
       icon: Clock,
       title: t('commitment.title'),
       description: t('commitment.description')
     },
     {
-      number: locale === 'ar' ? '٠٤' : '04',
+      number: locale === 'ar' ? '٠٣' : '03',
       icon: Shield,
       title: t('quality.title'),
       description: t('quality.description')
@@ -51,11 +45,11 @@ const WhyUs = () => {
         </div>
 
         {/* Hybrid Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 mb-16">
           {reasons.map((reason, index) => (
             <div
               key={index}
-              className="group relative bg-white p-8 transition-all duration-500 hover:shadow-2xl"
+              className="group relative bg-white p-6 sm:p-8 transition-all duration-500 hover:shadow-2xl"
               style={{
                 clipPath: locale === 'ar'
                   ? 'polygon(0 0, 95% 0, 100% 15%, 100% 100%, 3% 100%, 0 85%)'
@@ -147,10 +141,10 @@ const WhyUs = () => {
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               {
-                type: 'year',
-                value: 2024,
-                label: t('stats.founded'),
-                accent: 'founded'
+                type: 'support',
+                value: '24/7',
+                label: t('stats.support'),
+                accent: 'support'
               },
               {
                 type: 'projects',
@@ -177,13 +171,17 @@ const WhyUs = () => {
               <div key={index} className="group">
                 <div className="text-3xl lg:text-4xl font-bold text-[#9c5748] mb-3 group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
                   {stat.prefix && <span>{stat.prefix}</span>}
-                  <CountUp
-                    from={0}
-                    to={stat.value}
-                    duration={1.5}
-                    delay={index * 0.2}
-                    locale={locale === 'ar' ? 'ar-SA' : 'en-US'}
-                  />
+                  {stat.type === 'support' ? (
+                    <span>{stat.value}</span>
+                  ) : (
+                    <CountUp
+                      from={0}
+                      to={stat.value}
+                      duration={1}
+                      delay={index * 0.2}
+                      locale={locale === 'ar' ? 'ar-SA' : 'en-US'}
+                    />
+                  )}
                   {stat.suffix && <span>{stat.suffix}</span>}
                 </div>
                 <div className="text-[#505248] text-base lg:text-lg font-medium">{stat.label}</div>
