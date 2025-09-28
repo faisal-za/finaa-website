@@ -15,6 +15,8 @@ const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
   const locale = useLocale()
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
+  const displayProjects = projects
+
   const filteredProjects = useMemo(() => {
     if (selectedCategory === 'all') return displayProjects
 
@@ -23,9 +25,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
         cat.id === selectedCategory || cat.slug === selectedCategory
       )
     )
-  }, [projects, selectedCategory, categories])
-
-  const displayProjects = projects
+  }, [displayProjects, selectedCategory])
 
   // Use Payload categories if available, otherwise fallback to translations
   const displayCategories = useMemo(() => {
