@@ -17,7 +17,7 @@ export default async function HomePage() {
       <main className=" bg-white">
         <Hero />
         <Services services={services} />
-        <Projects projects={projects} />
+        <Projects projects={projects} categories={categories} />
         <WhyUsOption3 />
         <Contact />
       </main>

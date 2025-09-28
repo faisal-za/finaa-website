@@ -360,6 +360,14 @@ label.field-label {
     mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/wrench.svg');
 }
 
+.app-header {
+    border-bottom: 1px solid;
+}
+
+.collection-list {
+    padding-top: 1rem;
+}
+
 @layer base {
     * {
         border-color: hsl(var(--border));

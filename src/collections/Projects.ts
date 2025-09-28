@@ -42,7 +42,7 @@ export const Projects: CollectionConfig = {
                 ar: "الصور"
             },
             type: 'array',
-            required: true,
+            required: false, // Temporarily made optional for seeding
             minRows: 1,
             maxRows: 10,
             labels: {
@@ -117,7 +117,7 @@ export const Projects: CollectionConfig = {
         {
             name: "more_details",
             type: "array",
-            maxRows: 4,
+            maxRows: 10,
             label: {
                 ar: "تفاصيل المشروع",
                 en: "Proejct Details"

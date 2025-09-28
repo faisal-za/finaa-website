@@ -133,11 +133,13 @@ export interface Project {
   id: number;
   name: string;
   description: string;
-  images: {
-    image: number | Media;
-    caption?: string | null;
-    id?: string | null;
-  }[];
+  images?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   categories: (number | Category)[];
   location: string;
   end_date?: string | null;
