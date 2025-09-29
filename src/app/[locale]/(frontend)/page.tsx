@@ -20,14 +20,20 @@ export default async function HomePage({ params }: HomePageProps) {
   const categories = await getCategories(locale)
   const content = await getContent(locale)
 
+  // Transform stats data to match component interface
+  const statsData = content?.stats?.map(stat => ({
+    title: stat.title,
+    number: stat.number
+  })) || []
+
   return (
     <>
       <main className=" bg-white">
-        <Hero stats={content.stats} />
+        <Hero stats={statsData} />
         <Services services={services} />
         <Projects projects={projects} categories={categories} />
-        <WhyUsOption3 stats={content.stats} />
-        <Contact contact={content.contact} />
+        <WhyUsOption3 stats={statsData} />
+        <Contact contact={content?.contact} />
       </main>
       <Footer />
     </>
