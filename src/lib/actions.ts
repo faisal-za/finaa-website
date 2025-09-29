@@ -15,7 +15,7 @@ export async function getServices(locale?: string) {
       collection: 'services',
       limit: 10,
       sort: '-createdAt',
-      locale: locale || 'en',
+      locale: (locale as 'ar' | 'en') || 'en',
     })
 
     return services.docs
@@ -35,7 +35,7 @@ export async function getProjects(locale?: string) {
       limit: 6,
       depth: 2,
       sort: '-createdAt',
-      locale: locale || 'en',
+      locale: (locale as 'ar' | 'en') || 'en',
     })
 
     return projects.docs
@@ -54,7 +54,7 @@ export async function getCategories(locale?: string) {
       collection: 'categories',
       limit: 20,
       sort: 'name',
-      locale: locale || 'en',
+      locale: (locale as 'ar' | 'en') || 'en',
     })
 
     return categories.docs
@@ -71,7 +71,7 @@ export async function getContent(locale?: string) {
   try {
     const content = await payload.findGlobal({
       slug: 'content',
-      locale: locale || 'en',
+      locale: (locale as 'ar' | 'en') || 'en',
     })
 
     return content
