@@ -77,7 +77,7 @@ export async function getContent(locale?: string) {
     return content
   } catch (error) {
     console.error('Error fetching content:', error)
-    return { stats: [] }
+    return { stats: [], contact: undefined }
   }
 }
 

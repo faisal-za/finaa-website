@@ -69,7 +69,7 @@ export interface Config {
   collections: {
     projects: Project;
     services: Service;
-    'contact-us': ContactUs;
+    contactUs: ContactUs;
     categories: Category;
     media: Media;
     users: User;
@@ -81,7 +81,7 @@ export interface Config {
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
-    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
+    contactUs: ContactUsSelect<false> | ContactUsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -198,24 +198,22 @@ export interface Service {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-us".
+ * via the `definition` "contactUs".
  */
 export interface ContactUs {
   id: number;
   name: string;
   email?: string | null;
-  serviceType?:
-    | (
-        | 'residential-development'
-        | 'commercial-construction'
-        | 'project-management'
-        | 'architectural-design'
-        | 'renovation-remodeling'
-        | 'land-development'
-        | 'consultation-services'
-        | 'other'
-      )
-    | null;
+  phone?: string | null;
+  projectType?: ('residential' | 'commercial' | 'institutional' | 'tourism' | 'other') | null;
+  message: string;
+  submittedAt: string;
+  clientIP?: string | null;
+  userAgent?: string | null;
+  status?: ('new' | 'in_progress' | 'replied' | 'closed') | null;
+  /**
+   * Internal notes for team members (not visible to client)
+   */
   notes?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -263,7 +261,7 @@ export interface PayloadLockedDocument {
         value: number | Service;
       } | null)
     | ({
-        relationTo: 'contact-us';
+        relationTo: 'contactUs';
         value: number | ContactUs;
       } | null)
     | ({
@@ -361,12 +359,18 @@ export interface ServicesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-us_select".
+ * via the `definition` "contactUs_select".
  */
 export interface ContactUsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
-  serviceType?: T;
+  phone?: T;
+  projectType?: T;
+  message?: T;
+  submittedAt?: T;
+  clientIP?: T;
+  userAgent?: T;
+  status?: T;
   notes?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -472,6 +476,20 @@ export interface Content {
         id?: string | null;
       }[]
     | null;
+  contact: {
+    /**
+     * Include country code (e.g., +966555123456)
+     */
+    whatsapp: string;
+    email: string;
+    address: {
+      title: string;
+      /**
+       * Google Maps or other map service URL
+       */
+      link: string;
+    };
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -486,6 +504,18 @@ export interface ContentSelect<T extends boolean = true> {
         title?: T;
         number?: T;
         id?: T;
+      };
+  contact?:
+    | T
+    | {
+        whatsapp?: T;
+        email?: T;
+        address?:
+          | T
+          | {
+              title?: T;
+              link?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
