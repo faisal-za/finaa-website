@@ -4,8 +4,9 @@ import config from '@/payload.config'
 import { headers } from 'next/headers'
 import { z } from 'zod'
 import rateLimit from '@/lib/rate-limit'
+import type { ContactUs } from '@/payload-types'
 
-export async function getServices() {
+export async function getServices(locale?: string) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
@@ -14,6 +15,7 @@ export async function getServices() {
       collection: 'services',
       limit: 10,
       sort: '-createdAt',
+      locale: locale || 'en',
     })
 
     return services.docs
@@ -23,7 +25,7 @@ export async function getServices() {
   }
 }
 
-export async function getProjects() {
+export async function getProjects(locale?: string) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
@@ -33,6 +35,7 @@ export async function getProjects() {
       limit: 6,
       depth: 2,
       sort: '-createdAt',
+      locale: locale || 'en',
     })
 
     return projects.docs
@@ -42,7 +45,7 @@ export async function getProjects() {
   }
 }
 
-export async function getCategories() {
+export async function getCategories(locale?: string) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
@@ -51,12 +54,30 @@ export async function getCategories() {
       collection: 'categories',
       limit: 20,
       sort: 'name',
+      locale: locale || 'en',
     })
 
     return categories.docs
   } catch (error) {
     console.error('Error fetching categories:', error)
     return []
+  }
+}
+
+export async function getContent(locale?: string) {
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  try {
+    const content = await payload.findGlobal({
+      slug: 'content',
+      locale: locale || 'en',
+    })
+
+    return content
+  } catch (error) {
+    console.error('Error fetching content:', error)
+    return { stats: [] }
   }
 }
 
@@ -206,12 +227,16 @@ export async function submitContactForm(formData: {
 
     // Store form submission with metadata
     const headersList = await headers()
-    const submissionData = {
-      ...sanitizedData,
-      submittedAt: new Date(),
+    const submissionData: Omit<ContactUs, 'id' | 'createdAt' | 'updatedAt'> = {
+      name: sanitizedData.name,
+      email: sanitizedData.email || undefined,
+      phone: sanitizedData.phone || undefined,
+      projectType: sanitizedData.projectType as ContactUs['projectType'] || undefined,
+      message: sanitizedData.message,
+      submittedAt: new Date().toISOString(),
       clientIP: clientIP,
       userAgent: headersList.get('user-agent') || 'unknown',
-      verified: false,
+      status: 'new',
     }
 
     // Log the submission securely (without sensitive data in logs)
@@ -225,11 +250,13 @@ export async function submitContactForm(formData: {
       clientIP: clientIP.replace(/\d+$/, 'xxx'), // Partial IP for privacy
     })
 
-    // TODO: When ContactUs collection exists, use this:
-    // const contact = await payload.create({
-    //   collection: 'contactUs',
-    //   data: submissionData
-    // })
+    // Save to ContactUs collection
+    const contact = await payload.create({
+      collection: 'contactUs',
+      data: submissionData
+    })
+
+    console.log('Contact form saved to database:', { id: contact.id })
 
     return {
       success: true,

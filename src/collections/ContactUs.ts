@@ -1,119 +1,145 @@
 import type { CollectionConfig } from 'payload'
 
 export const ContactUs: CollectionConfig = {
-    slug: 'contact-us',
+    slug: 'contactUs',
     labels: {
         singular: {
-            en: 'Contact Request',
-            ar: 'طلب التواصل',
+            en: 'Contact Submission',
+            ar: 'رسالة تواصل',
         },
         plural: {
-            en: 'Contact Requests',
-            ar: 'طلبات التواصل',
+            en: 'Contact Submissions',
+            ar: 'رسائل التواصل',
         },
     },
     admin: {
         useAsTitle: 'name',
+        defaultColumns: ['name', 'email', 'projectType', 'submittedAt'],
+        listSearchableFields: ['name', 'email', 'message'],
+    },
+    access: {
+        create: () => true, // Allow form submissions
+        read: ({ req: { user } }) => !!user, // Only authenticated users can read
+        update: ({ req: { user } }) => !!user, // Only authenticated users can update
+        delete: ({ req: { user } }) => !!user, // Only authenticated users can delete
     },
     fields: [
         {
             name: 'name',
             type: 'text',
             required: true,
-            localized: true,
             label: {
-                en: 'Name',
-                ar: 'الاسم',
+                en: 'Full Name',
+                ar: 'الاسم الكامل',
             },
         },
         {
             name: 'email',
             type: 'email',
-            required: false,
             label: {
-                en: 'Email',
+                en: 'Email Address',
                 ar: 'البريد الإلكتروني',
             },
         },
         {
-            name: 'serviceType',
-            type: 'select',
-            required: false,
+            name: 'phone',
+            type: 'text',
             label: {
-                en: 'Service Type',
-                ar: 'نوع الخدمة',
+                en: 'Phone Number',
+                ar: 'رقم الهاتف',
             },
-            admin: {
-                isClearable: true,
+        },
+        {
+            name: 'projectType',
+            type: 'select',
+            label: {
+                en: 'Project Type',
+                ar: 'نوع المشروع',
             },
             options: [
-                {
-                    label: {
-                        en: 'Residential Development',
-                        ar: 'التطوير السكني',
-                    },
-                    value: 'residential-development',
-                },
-                {
-                    label: {
-                        en: 'Commercial Construction',
-                        ar: 'البناء التجاري',
-                    },
-                    value: 'commercial-construction',
-                },
-                {
-                    label: {
-                        en: 'Project Management',
-                        ar: 'إدارة المشاريع',
-                    },
-                    value: 'project-management',
-                },
-                {
-                    label: {
-                        en: 'Architectural Design',
-                        ar: 'التصميم المعماري',
-                    },
-                    value: 'architectural-design',
-                },
-                {
-                    label: {
-                        en: 'Renovation & Remodeling',
-                        ar: 'التجديد وإعادة التصميم',
-                    },
-                    value: 'renovation-remodeling',
-                },
-                {
-                    label: {
-                        en: 'Land Development',
-                        ar: 'تطوير الأراضي',
-                    },
-                    value: 'land-development',
-                },
-                {
-                    label: {
-                        en: 'Consultation Services',
-                        ar: 'خدمات الاستشارة',
-                    },
-                    value: 'consultation-services',
-                },
-                {
-                    label: {
-                        en: 'Other',
-                        ar: 'أخرى',
-                    },
-                    value: 'other',
-                },
+                { label: { en: 'Residential', ar: 'سكني' }, value: 'residential' },
+                { label: { en: 'Commercial', ar: 'تجاري' }, value: 'commercial' },
+                { label: { en: 'Institutional', ar: 'مؤسسي' }, value: 'institutional' },
+                { label: { en: 'Tourism', ar: 'سياحي' }, value: 'tourism' },
+                { label: { en: 'Other', ar: 'أخرى' }, value: 'other' },
             ],
+        },
+        {
+            name: 'message',
+            type: 'textarea',
+            required: true,
+            label: {
+                en: 'Message',
+                ar: 'الرسالة',
+            },
+        },
+        {
+            name: 'submittedAt',
+            type: 'date',
+            required: true,
+            defaultValue: () => new Date(),
+            label: {
+                en: 'Submitted At',
+                ar: 'تاريخ الإرسال',
+            },
+            admin: {
+                readOnly: true,
+                position: 'sidebar',
+            },
+        },
+        {
+            name: 'clientIP',
+            type: 'text',
+            label: {
+                en: 'Client IP',
+                ar: 'عنوان IP',
+            },
+            admin: {
+                readOnly: true,
+                position: 'sidebar',
+            },
+        },
+        {
+            name: 'userAgent',
+            type: 'text',
+            label: {
+                en: 'User Agent',
+                ar: 'معرف المتصفح',
+            },
+            admin: {
+                readOnly: true,
+                position: 'sidebar',
+            },
+        },
+        {
+            name: 'status',
+            type: 'select',
+            label: {
+                en: 'Status',
+                ar: 'الحالة',
+            },
+            defaultValue: 'new',
+            options: [
+                { label: { en: 'New', ar: 'جديد' }, value: 'new' },
+                { label: { en: 'In Progress', ar: 'قيد المعالجة' }, value: 'in_progress' },
+                { label: { en: 'Replied', ar: 'تم الرد' }, value: 'replied' },
+                { label: { en: 'Closed', ar: 'مغلق' }, value: 'closed' },
+            ],
+            admin: {
+                position: 'sidebar',
+            },
         },
         {
             name: 'notes',
             type: 'textarea',
-            required: false,
-            localized: true,
             label: {
-                en: 'Notes',
-                ar: 'ملاحظات',
+                en: 'Internal Notes',
+                ar: 'ملاحظات داخلية',
+            },
+            admin: {
+                description: 'Internal notes for team members (not visible to client)',
             },
         },
     ],
+    timestamps: true,
 }

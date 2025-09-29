@@ -462,14 +462,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Content {
   id: number;
-  services_section?: {
-    title?: string | null;
-    description?: string | null;
-  };
-  projects_section?: {
-    title?: string | null;
-    description?: string | null;
-  };
+  stats?:
+    | {
+        title: string;
+        /**
+         * Examples: 150+, 98%, 24/7, etc.
+         */
+        number: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -478,17 +480,12 @@ export interface Content {
  * via the `definition` "content_select".
  */
 export interface ContentSelect<T extends boolean = true> {
-  services_section?:
+  stats?:
     | T
     | {
         title?: T;
-        description?: T;
-      };
-  projects_section?:
-    | T
-    | {
-        title?: T;
-        description?: T;
+        number?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;

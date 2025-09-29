@@ -5,9 +5,77 @@ import { Users, Clock, Shield } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import CountUp from '@/components/ui/CountUp'
 
-const WhyUs = () => {
+interface WhyUsProps {
+  stats?: Array<{
+    title: string
+    number: string
+  }>
+}
+
+const WhyUs = ({ stats = [] }: WhyUsProps) => {
   const locale = useLocale()
   const t = useTranslations('whyUs')
+
+  // Helper function to extract numeric value from stat number
+  const extractNumber = (numberStr: string): number => {
+    const match = numberStr.match(/\d+/)
+    return match ? parseInt(match[0]) : 0
+  }
+
+  // Helper function to extract prefix/suffix
+  const extractPrefixSuffix = (numberStr: string) => {
+    const numMatch = numberStr.match(/\d+/)
+    if (!numMatch) return { prefix: '', suffix: '' }
+
+    const num = numMatch[0]
+    const beforeNum = numberStr.substring(0, numberStr.indexOf(num))
+    const afterNum = numberStr.substring(numberStr.indexOf(num) + num.length)
+
+    return { prefix: beforeNum, suffix: afterNum }
+  }
+  console.log("stats", stats)
+  // Fallback to hardcoded values if no stats provided or convert dynamic stats
+  const displayStats = stats.length > 0 ? stats.map(stat => {
+    const { prefix, suffix } = extractPrefixSuffix(stat.number)
+    const number = extractNumber(stat.number)
+
+    return {
+      type: 'dynamic',
+      value: number > 0 ? number : stat.number, // Use extracted number if > 0, otherwise use original string
+      prefix: prefix,
+      suffix: suffix,
+      label: stat.title,
+      accent: 'default'
+    }
+  }) : [
+    {
+      type: 'support',
+      value: '24/7',
+      label: t('stats.support'),
+      accent: 'support'
+    },
+    {
+      type: 'projects',
+      value: 150,
+      suffix: '+',
+      label: t('stats.projects'),
+      accent: 'projects'
+    },
+    {
+      type: 'team',
+      value: 50,
+      suffix: '+',
+      label: t('stats.team'),
+      accent: 'team'
+    },
+    {
+      type: 'percentage',
+      value: 98,
+      prefix: '%',
+      label: t('stats.satisfaction'),
+      accent: 'satisfaction'
+    }
+  ]
   const reasons = [
     {
       number: locale === 'ar' ? '٠١' : '01',
@@ -139,48 +207,20 @@ const WhyUs = () => {
           </div>
 
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              {
-                type: 'support',
-                value: '24/7',
-                label: t('stats.support'),
-                accent: 'support'
-              },
-              {
-                type: 'projects',
-                value: 150,
-                suffix: '+',
-                label: t('stats.projects'),
-                accent: 'projects'
-              },
-              {
-                type: 'team',
-                value: 50,
-                suffix: '+',
-                label: t('stats.team'),
-                accent: 'team'
-              },
-              {
-                type: 'percentage',
-                value: 98,
-                prefix: '%',
-                label: t('stats.satisfaction'),
-                accent: 'satisfaction'
-              }
-            ].map((stat, index) => (
+            {displayStats.map((stat, index) => (
               <div key={index} className="group">
                 <div className="text-3xl lg:text-4xl font-bold text-[#9c5748] mb-3 group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
                   {stat.prefix && <span>{stat.prefix}</span>}
-                  {stat.type === 'support' ? (
-                    <span>{stat.value}</span>
-                  ) : (
+                  {typeof stat.value === 'number' ? (
                     <CountUp
                       from={0}
-                      to={typeof stat.value === 'number' ? stat.value : 0}
+                      to={stat.value}
                       duration={1}
                       delay={index * 0.2}
                       locale={locale === 'ar' ? 'ar-SA' : 'en-US'}
                     />
+                  ) : (
+                    <span>{stat.value}</span>
                   )}
                   {stat.suffix && <span>{stat.suffix}</span>}
                 </div>

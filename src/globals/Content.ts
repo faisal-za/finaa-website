@@ -3,62 +3,77 @@ import type { GlobalConfig } from "payload";
 export const Content: GlobalConfig = {
     slug: "content",
     label: {
-        ar: "المحتوى"
+        ar: "المحتوى",
+        en: "Content"
     },
     fields: [
         {
-            name: "services_section",
-            label: {
-                ar: "قسم الخدمات"
-            },
-            type: "group",
+            name: 'stats',
+            type: 'array',
+            label: 'Website Statistics',
+            minRows: 1,
+            maxRows: 4,
             fields: [
                 {
-                    name: "title",
-                    type: "text",
+                    name: 'title',
+                    type: 'text',
+                    required: true,
                     localized: true,
-                    label: {
-                        ar: "العنوان"
-                    }
+                    label: 'Title'
                 },
                 {
-                    name: "description",
-                    localized: true,
-                    label: {
-                        ar: "الوصف"
-                    },
-                    type: "textarea",
+                    name: 'number',
+                    type: 'text',
+                    required: true,
+                    label: 'Number',
                     admin: {
-                        rows: 3
+                        description: 'Examples: 150+, 98%, 24/7, etc.'
                     }
                 }
             ]
         },
         {
-            name: "projects_section",
-            label: {
-                ar: "قسم المشاريع"
-            },
-            type: "group",
+            name: 'contact',
+            type: 'group',
+            label: 'Contact Information',
             fields: [
                 {
-                    name: "title",
-                    type: "text",
-                    localized: true,
-                    label: {
-                        ar: "العنوان"
+                    name: 'whatsapp',
+                    type: 'text',
+                    required: true,
+                    label: 'WhatsApp Number',
+                    admin: {
+                        description: 'Include country code (e.g., +966555123456)'
                     }
                 },
                 {
-                    name: "description",
-                    localized: true,
-                    label: {
-                        ar: "الوصف"
-                    },
-                    type: "textarea",
-                    admin: {
-                        rows: 3
-                    }
+                    name: 'email',
+                    type: 'email',
+                    required: true,
+                    label: 'Email Address'
+                },
+                {
+                    name: 'address',
+                    type: 'group',
+                    label: 'Address',
+                    fields: [
+                        {
+                            name: 'title',
+                            type: 'text',
+                            required: true,
+                            localized: true,
+                            label: 'Address Title'
+                        },
+                        {
+                            name: 'link',
+                            type: 'text',
+                            required: true,
+                            label: 'Map Link',
+                            admin: {
+                                description: 'Google Maps or other map service URL'
+                            }
+                        }
+                    ]
                 }
             ]
         }

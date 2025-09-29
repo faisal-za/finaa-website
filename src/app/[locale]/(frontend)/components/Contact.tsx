@@ -14,7 +14,18 @@ import { useLocale, useTranslations } from 'next-intl'
 import { submitContactForm } from '@/lib/actions'
 import { useState, useRef } from 'react'
 
-const Contact = () => {
+interface ContactProps {
+  contact?: {
+    whatsapp?: string
+    email?: string
+    address?: {
+      title?: string
+      link?: string
+    }
+  }
+}
+
+const Contact = ({ contact }: ContactProps) => {
   const locale = useLocale()
   const t = useTranslations('contact')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -141,17 +152,17 @@ const Contact = () => {
     {
       icon: MessageCircle,
       title: locale === 'ar' ? 'واتساب' : 'WhatsApp',
-      details: ['+966 50 123 4567']
+      details: [contact?.whatsapp || '+966 50 123 4567']
     },
     {
       icon: Mail,
       title: t('email'),
-      details: ['info@finaa.sa']
+      details: [contact?.email || 'info@finaa.sa']
     },
     {
       icon: MapPin,
       title: t('address'),
-      details: [t('addressDetails')]
+      details: [contact?.address?.title || t('addressDetails')]
     },
     {
       icon: Clock,
@@ -187,9 +198,12 @@ const Contact = () => {
           <div className="space-y-8">
             {contactInfo.map((info, index) => {
               const getHref = () => {
-                if (info.icon === MessageCircle) return `https://wa.me/966501234567`
-                if (info.icon === Mail) return `mailto:info@finaa.sa`
-                if (info.icon === MapPin) return `https://maps.google.com/?q=Riyadh,+Saudi+Arabia`
+                if (info.icon === MessageCircle) {
+                  const phoneNumber = (contact?.whatsapp || '+966501234567').replace(/[^\d+]/g, '')
+                  return `https://wa.me/${phoneNumber}`
+                }
+                if (info.icon === Mail) return `mailto:${contact?.email || 'info@finaa.sa'}`
+                if (info.icon === MapPin) return contact?.address?.link || `https://maps.google.com/?q=Riyadh,+Saudi+Arabia`
                 return undefined
               }
 

@@ -296,7 +296,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           </div> */}
 
           {/* Project Details - Only show on mobile/tablet when expanded */}
-          {project.details && (
+          {project.more_details && project.more_details.length > 0 && (
             <>
               <Separator className="lg:hidden" />
               <div className={`lg:hidden transition-all duration-500 ease-in-out overflow-hidden ${isExpanded
@@ -305,10 +305,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 }`}>
                 <h4 className="font-bold text-[#302c30] mb-2">{t('projectDetails')}</h4>
                 <ul className="text-sm text-[#505248]">
-                  {project.details.map((detail: string, idx: number) => (
+                  {project.more_details.map((detail: any, idx: number) => (
                     <li key={idx} className="flex flex-row items-center">
                       <DotIcon size={30} className="text-[#9c5748]" />
-                      <p>{detail}</p>
+                      <p>{detail.text}</p>
                     </li>
                   ))}
                 </ul>
@@ -394,16 +394,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                   </div>
 
                   {/* Project Details */}
-                  {project.details && (
+                  {project.more_details && project.more_details.length > 0 && (
                     <>
                       <Separator className="mb-6" />
                       <div>
                         <h4 className="font-bold text-[#302c30] mb-4 text-xl">{t('projectDetails')}</h4>
                         <ul className="text-[#505248] space-y-2">
-                          {project.details.map((detail: string, idx: number) => (
+                          {project.more_details.map((detail: any, idx: number) => (
                             <li key={idx} className="flex flex-row items-center">
                               <DotIcon size={30} className="text-[#9c5748] flex-shrink-0" />
-                              <p className="text-base">{detail}</p>
+                              <p className="text-base">{detail.text}</p>
                             </li>
                           ))}
                         </ul>

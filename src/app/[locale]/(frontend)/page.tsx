@@ -5,21 +5,29 @@ import Projects from './components/Projects'
 import WhyUsOption3 from './components/WhyUs'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
-import { getServices, getProjects, getCategories } from '@/lib/actions'
+import { getServices, getProjects, getCategories, getContent } from '@/lib/actions'
 
-export default async function HomePage() {
-  const services = await getServices()
-  const projects = await getProjects()
-  const categories = await getCategories()
+interface HomePageProps {
+  params: Promise<{
+    locale: string
+  }>
+}
+
+export default async function HomePage({ params }: HomePageProps) {
+  const { locale } = await params
+  const services = await getServices(locale)
+  const projects = await getProjects(locale)
+  const categories = await getCategories(locale)
+  const content = await getContent(locale)
 
   return (
     <>
       <main className=" bg-white">
-        <Hero />
+        <Hero stats={content.stats} />
         <Services services={services} />
         <Projects projects={projects} categories={categories} />
-        <WhyUsOption3 />
-        <Contact />
+        <WhyUsOption3 stats={content.stats} />
+        <Contact contact={content.contact} />
       </main>
       <Footer />
     </>

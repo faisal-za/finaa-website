@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react'
 import ProjectCard from './ProjectCard'
 import { Button } from '@/components/ui/button'
 import { useTranslations, useLocale } from 'next-intl'
-
+import FadeContent from '@/components/ui/FadeContent'
 interface ProjectsProps {
   projects: any[]
   categories: any[]
@@ -34,7 +34,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
     if (categories.length > 0) {
       const payloadCategories = categories.map((cat: any) => ({
         id: cat.id,
-        name: locale === 'ar' ? cat.name : cat.nameEn,
+        name: cat.name, // Payload returns localized content based on locale parameter
         slug: cat.slug
       }))
       return [allCategory, ...payloadCategories]
@@ -42,7 +42,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
 
     // Return only "All" if no categories from CMS
     return [allCategory]
-  }, [categories, t, locale])
+  }, [categories, t])
 
   return (
     <section id="projects" className="py-16 lg:py-24 bg-white">

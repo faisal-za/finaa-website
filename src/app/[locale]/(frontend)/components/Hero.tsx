@@ -6,10 +6,42 @@ import { useTranslations, useLocale } from 'next-intl'
 import CountUp from '@/components/ui/CountUp'
 import FadeContent from '@/components/ui/FadeContent'
 
-const Hero = () => {
+interface HeroProps {
+  stats?: Array<{
+    title: string
+    number: string
+  }>
+}
+
+const Hero = ({ stats = [] }: HeroProps) => {
   const t = useTranslations('hero')
   const statsT = useTranslations('whyUs.stats')
   const locale = useLocale()
+
+  // Fallback to hardcoded values if no stats provided
+  const displayStats = stats.length > 0 ? stats : [
+    { title: statsT('projects'), number: '120+' },
+    { title: statsT('team'), number: '50+' },
+    { title: statsT('satisfaction'), number: '98%' }
+  ]
+
+  // Helper function to extract numeric value from stat number
+  const extractNumber = (numberStr: string): number => {
+    const match = numberStr.match(/\d+/)
+    return match ? parseInt(match[0]) : 0
+  }
+
+  // Helper function to extract prefix/suffix
+  const extractPrefixSuffix = (numberStr: string) => {
+    const numMatch = numberStr.match(/\d+/)
+    if (!numMatch) return { prefix: '', suffix: '' }
+
+    const num = numMatch[0]
+    const beforeNum = numberStr.substring(0, numberStr.indexOf(num))
+    const afterNum = numberStr.substring(numberStr.indexOf(num) + num.length)
+
+    return { prefix: beforeNum, suffix: afterNum }
+  }
 
   const handleSmoothScroll = (targetId: string) => {
     const element = document.getElementById(targetId)
@@ -73,50 +105,27 @@ const Hero = () => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-3 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 border-t border-gray-200">
-              <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
-                <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                  <CountUp
-                    from={0}
-                    to={120}
-                    separator=","
-                    direction="up"
-                    duration={0.5}
-                    locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
-                  <p>+</p>
-                </div>
-                <div className="text-sm  text-[#505248] mt-1">{statsT('projects')}</div>
-              </div>
-              <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
-                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                  <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                    <CountUp
-                      from={0}
-                      to={50}
-                      separator=","
-                      direction="up"
-                      duration={1}
-                      locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
-                    <p>+</p>
+              {displayStats.slice(0, 3).map((stat, index) => {
+                const { prefix, suffix } = extractPrefixSuffix(stat.number)
+                const number = extractNumber(stat.number)
+
+                return (
+                  <div key={index} className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
+                    <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
+                      {prefix && <p>{prefix}</p>}
+                      <CountUp
+                        from={0}
+                        to={number}
+                        separator=","
+                        direction="up"
+                        duration={0.5 + index * 0.25}
+                        locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
+                      {suffix && <p>{suffix}</p>}
+                    </div>
+                    <div className="text-sm text-[#505248] mt-1">{stat.title}</div>
                   </div>
-                </div>
-                <div className="text-sm sm:text-sm text-[#505248] mt-1">{statsT('team')}</div>
-              </div>
-              <div className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
-                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                  <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                    <p>%</p>
-                    <CountUp
-                      from={0}
-                      to={98}
-                      separator=","
-                      direction="up"
-                      duration={1}
-                      locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
-                    <p>+</p>
-                  </div>
-                </div>
-                <div className="text-sm sm:text-sm text-[#505248] mt-1">{statsT('satisfaction')}</div>
-              </div>
+                )
+              })}
             </div>
           </div>
 
