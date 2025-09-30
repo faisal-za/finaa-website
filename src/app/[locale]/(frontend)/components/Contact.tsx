@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { Phone, Mail, MapPin, Clock, Send, MessageCircle } from 'lucide-react'
+import React, { useState } from 'react'
+import { Mail, MapPin, Clock, Send, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,16 +12,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useLocale, useTranslations } from 'next-intl'
 import { submitContactForm } from '@/lib/actions'
-import { useState, useRef } from 'react'
 
 interface ContactProps {
   contact?: {
-    whatsapp?: string
-    email?: string
-    address?: {
-      title?: string
-      link?: string
-    }
+    whatsapp?: string | null
+    email?: string | null
+    address?: string | null
   }
 }
 
@@ -30,30 +26,24 @@ const Contact = ({ contact }: ContactProps) => {
   const t = useTranslations('contact')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<{ success?: boolean; message?: string } | null>(null)
-  const [attemptCount, setAttemptCount] = useState(0)
-  const formRef = useRef<HTMLFormElement>(null)
-  const lastSubmissionTime = useRef<number>(0)
 
-  // Enhanced form schema with security validations
+  // Form validation with basic security
   const formSchema = z.object({
     name: z.string()
       .min(2, { message: t('form.validation.nameRequired') })
-      .max(100, { message: 'Name too long' })
-      .regex(/^[a-zA-Z\u0600-\u06FF\s]+$/, { message: 'Invalid characters in name' }),
+      .max(100, { message: 'Name too long' }),
     email: z.string()
       .email({ message: t('form.validation.emailRequired') })
       .max(255, { message: 'Email too long' })
       .optional()
       .or(z.literal('')),
     phone: z.string()
-      .regex(/^[\+]?[1-9][\d]{0,15}$/, { message: 'Invalid phone format' })
-      .optional()
-      .or(z.literal('')),
+      .min(1, { message: 'Phone number is required' })
+      .max(20, { message: 'Phone too long' }),
     projectType: z.string().optional(),
     message: z.string()
       .min(10, { message: t('form.validation.messageRequired') })
-      .max(2000, { message: 'Message too long' })
-      .regex(/^[^<>{}]*$/, { message: 'Invalid characters in message' }),
+      .max(2000, { message: 'Message too long' }),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,49 +57,10 @@ const Contact = ({ contact }: ContactProps) => {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Client-side rate limiting
-    const now = Date.now()
-    const timeSinceLastSubmission = now - lastSubmissionTime.current
-
-    if (timeSinceLastSubmission < 5000) { // 5 seconds minimum between submissions
-      setSubmitStatus({
-        success: false,
-        message: 'Please wait before submitting again.'
-      })
-      return
-    }
-
-    // Prevent rapid successive attempts
-    if (attemptCount >= 3) {
-      setSubmitStatus({
-        success: false,
-        message: 'Too many attempts. Please refresh the page and try again.'
-      })
-      return
-    }
-
     setIsSubmitting(true)
     setSubmitStatus(null)
-    setAttemptCount(prev => prev + 1)
-    lastSubmissionTime.current = now
 
     try {
-      // Additional client-side validation
-      const suspiciousPatterns = [
-        /script/i, /javascript/i, /onclick/i, /onerror/i,
-        /<[^>]*>/g, /eval\(/i, /document\./i, /window\./i
-      ]
-
-      const textToCheck = `${values.name} ${values.email || ''} ${values.message}`
-
-      if (suspiciousPatterns.some(pattern => pattern.test(textToCheck))) {
-        setSubmitStatus({
-          success: false,
-          message: 'Invalid content detected. Please remove any special characters.'
-        })
-        return
-      }
-
       const result = await submitContactForm({
         name: values.name.trim(),
         email: values.email?.trim(),
@@ -121,27 +72,19 @@ const Contact = ({ contact }: ContactProps) => {
       if (result.success) {
         setSubmitStatus({
           success: true,
-          message: t('form.success', { default: 'Message sent successfully!' })
+          message: t('form.success')
         })
         form.reset()
-        setAttemptCount(0) // Reset on success
       } else {
-        let errorMessage = t('form.error', { default: 'Failed to send message. Please try again.' })
-
-        if (result.rateLimited) {
-          errorMessage = 'Too many requests. Please try again later.'
-        } else if (result.spam) {
-          errorMessage = 'Message flagged as spam. Please revise your message.'
-        } else if (result.security) {
-          errorMessage = 'Invalid content detected. Please remove any special characters.'
-        }
-
-        setSubmitStatus({ success: false, message: errorMessage })
+        setSubmitStatus({
+          success: false,
+          message: result.error || t('form.error')
+        })
       }
     } catch (error) {
       setSubmitStatus({
         success: false,
-        message: t('form.error', { default: 'Failed to send message. Please try again.' })
+        message: t('form.error')
       })
     } finally {
       setIsSubmitting(false)
@@ -162,7 +105,7 @@ const Contact = ({ contact }: ContactProps) => {
     {
       icon: MapPin,
       title: t('address'),
-      details: [contact?.address?.title || t('addressDetails')]
+      details: [contact?.address || t('addressDetails')]
     },
     {
       icon: Clock,
@@ -199,16 +142,16 @@ const Contact = ({ contact }: ContactProps) => {
             {contactInfo.map((info, index) => {
               const getHref = () => {
                 if (info.icon === MessageCircle) {
-                  const phoneNumber = (contact?.whatsapp || '+966501234567').replace(/[^\d+]/g, '')
+                  // Remove all non-digit characters except the leading +
+                  const phoneNumber = (contact?.whatsapp || '+966501234567').replace(/\s+/g, '').replace(/[^\d+]/g, '')
                   return `https://wa.me/${phoneNumber}`
                 }
                 if (info.icon === Mail) return `mailto:${contact?.email || 'info@finaa.sa'}`
-                if (info.icon === MapPin) return contact?.address?.link || `https://maps.google.com/?q=Riyadh,+Saudi+Arabia`
                 return undefined
               }
 
               const href = getHref()
-              const isClickable = href && (info.icon === MessageCircle || info.icon === Mail || info.icon === MapPin)
+              const isClickable = href && (info.icon === MessageCircle || info.icon === Mail)
 
               const content = (
                 <div className="flex items-center gap-4">
@@ -237,8 +180,8 @@ const Contact = ({ contact }: ContactProps) => {
                   {isClickable ? (
                     <a
                       href={href}
-                      target={info.icon === MapPin || info.icon === MessageCircle ? "_blank" : undefined}
-                      rel={info.icon === MapPin || info.icon === MessageCircle ? "noopener noreferrer" : undefined}
+                      target={info.icon === MessageCircle ? "_blank" : undefined}
+                      rel={info.icon === MessageCircle ? "noopener noreferrer" : undefined}
                       className="block"
                     >
                       {content}
@@ -263,11 +206,8 @@ const Contact = ({ contact }: ContactProps) => {
 
             <Form {...form}>
               <form
-                ref={formRef}
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6 flex-1 flex flex-col"
-                autoComplete="on"
-                noValidate
               >
                 {/* Name - Full Width */}
                 <FormField
@@ -280,8 +220,6 @@ const Contact = ({ contact }: ContactProps) => {
                         <Input
                           placeholder={t('form.fullNamePlaceholder')}
                           className={`bg-white border-[#302c30]/20 rounded-none focus-visible:ring-[#9c5748] ${locale === 'ar' ? 'text-right' : 'text-left'}`}
-                          autoComplete="name"
-                          maxLength={100}
                           {...field}
                         />
                       </FormControl>
@@ -303,8 +241,6 @@ const Contact = ({ contact }: ContactProps) => {
                             type="email"
                             placeholder={t('form.emailPlaceholder')}
                             className={`bg-white border-[#302c30]/20 rounded-none focus-visible:ring-[#9c5748] ${locale === 'ar' ? 'text-right' : 'text-left'}`}
-                            autoComplete="email"
-                            maxLength={255}
                             {...field}
                           />
                         </FormControl>
@@ -318,14 +254,12 @@ const Contact = ({ contact }: ContactProps) => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-[#302c30] font-medium">{t('form.phone')}</FormLabel>
+                        <FormLabel className="text-[#302c30] font-medium">{t('form.phone')} {t('form.required')}</FormLabel>
                         <FormControl>
                           <Input
                             type="tel"
                             placeholder={t('form.phonePlaceholder')}
                             className={`bg-white border-[#302c30]/20 rounded-none focus-visible:ring-[#9c5748] ${locale === 'ar' ? 'text-right' : 'text-left'}`}
-                            autoComplete="tel"
-                            maxLength={16}
                             {...field}
                           />
                         </FormControl>
@@ -370,7 +304,6 @@ const Contact = ({ contact }: ContactProps) => {
                         <Textarea
                           placeholder={t('form.messagePlaceholder')}
                           className={`bg-white border-[#302c30]/20 rounded-none focus-visible:ring-[#9c5748] resize-none flex-1 min-h-[150px] `}
-                          maxLength={2000}
                           {...field}
                         />
                       </FormControl>
@@ -392,11 +325,11 @@ const Contact = ({ contact }: ContactProps) => {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  disabled={isSubmitting || attemptCount >= 3}
+                  disabled={isSubmitting}
                   className="w-full bg-[#302c30] hover:bg-[#9c5748] disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 px-6 font-medium transition-all duration-300 rounded-none"
                 >
                   <Send className={`w-5 h-5 ${locale === 'ar' ? 'ml-2' : 'mr-2'}`} />
-                  {isSubmitting ? t('form.sending', { default: 'Sending...' }) : t('form.send')}
+                  {isSubmitting ? t('form.sending') : t('form.send')}
                 </Button>
               </form>
             </Form>

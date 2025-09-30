@@ -13,7 +13,6 @@ import { Media } from './collections/Media'
 import { ContactUs } from './collections/ContactUs'
 import { Categories } from './collections/Categories'
 import { Projects } from './collections/Projects'
-import { Services } from './collections/Services'
 
 import { Content } from './globals/Content'
 
@@ -26,12 +25,35 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
+    theme: "light",
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        Logo: "/components/client/logo",
+        Icon: "/components/client/icon"
+      },
+    }
   },
   i18n: {
     supportedLanguages: { en, ar },
+    translations: {
+      ar: {
+        general: {
+          true: "نعم",
+          false: "لا يوجد",
+          collections: "الكل",
+          createNew: "إنشاء جديد",
+          all: "كل",
+          trash: "الأرشيف",
+          emptyTrash: "تفريغ الأرشيف",
+          noTrashResults: "لا توجد نتائج في الأرشيف",
+          noResults: "لا توجد نتائج ...",
+          collapse: "إغلاق"
+        }
+      }
+    }
   },
   localization: {
     locales: [
@@ -50,7 +72,6 @@ export default buildConfig({
   },
   collections: [
     Projects,
-    Services,
     ContactUs,
     Categories,
     Media,

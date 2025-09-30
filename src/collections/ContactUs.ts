@@ -1,20 +1,20 @@
 import type { CollectionConfig } from 'payload'
 
 export const ContactUs: CollectionConfig = {
-    slug: 'contactUs',
+    slug: 'contact-us',
     labels: {
         singular: {
             en: 'Contact Submission',
-            ar: 'رسالة تواصل',
+            ar: 'طلب تواصل',
         },
         plural: {
             en: 'Contact Submissions',
-            ar: 'رسائل التواصل',
+            ar: 'طلبات التواصل',
         },
     },
     admin: {
         useAsTitle: 'name',
-        defaultColumns: ['name', 'email', 'projectType', 'submittedAt'],
+        defaultColumns: ['name', 'email', 'projectType'],
         listSearchableFields: ['name', 'email', 'message'],
     },
     access: {
@@ -51,18 +51,18 @@ export const ContactUs: CollectionConfig = {
         },
         {
             name: 'projectType',
-            type: 'select',
+            type: 'relationship',
+            relationTo: 'categories',
             label: {
                 en: 'Project Type',
                 ar: 'نوع المشروع',
             },
-            options: [
-                { label: { en: 'Residential', ar: 'سكني' }, value: 'residential' },
-                { label: { en: 'Commercial', ar: 'تجاري' }, value: 'commercial' },
-                { label: { en: 'Institutional', ar: 'مؤسسي' }, value: 'institutional' },
-                { label: { en: 'Tourism', ar: 'سياحي' }, value: 'tourism' },
-                { label: { en: 'Other', ar: 'أخرى' }, value: 'other' },
-            ],
+            admin: {
+                description: {
+                    en: 'Select the category that best describes this project inquiry',
+                    ar: 'اختر الفئة التي تصف استفسار المشروع بأفضل شكل'
+                }
+            }
         },
         {
             name: 'message',
@@ -71,20 +71,6 @@ export const ContactUs: CollectionConfig = {
             label: {
                 en: 'Message',
                 ar: 'الرسالة',
-            },
-        },
-        {
-            name: 'submittedAt',
-            type: 'date',
-            required: true,
-            defaultValue: () => new Date(),
-            label: {
-                en: 'Submitted At',
-                ar: 'تاريخ الإرسال',
-            },
-            admin: {
-                readOnly: true,
-                position: 'sidebar',
             },
         },
         {
@@ -109,35 +95,6 @@ export const ContactUs: CollectionConfig = {
             admin: {
                 readOnly: true,
                 position: 'sidebar',
-            },
-        },
-        {
-            name: 'status',
-            type: 'select',
-            label: {
-                en: 'Status',
-                ar: 'الحالة',
-            },
-            defaultValue: 'new',
-            options: [
-                { label: { en: 'New', ar: 'جديد' }, value: 'new' },
-                { label: { en: 'In Progress', ar: 'قيد المعالجة' }, value: 'in_progress' },
-                { label: { en: 'Replied', ar: 'تم الرد' }, value: 'replied' },
-                { label: { en: 'Closed', ar: 'مغلق' }, value: 'closed' },
-            ],
-            admin: {
-                position: 'sidebar',
-            },
-        },
-        {
-            name: 'notes',
-            type: 'textarea',
-            label: {
-                en: 'Internal Notes',
-                ar: 'ملاحظات داخلية',
-            },
-            admin: {
-                description: 'Internal notes for team members (not visible to client)',
             },
         },
     ],

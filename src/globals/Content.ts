@@ -1,7 +1,11 @@
 import type { GlobalConfig } from "payload";
+import { revalidateContent } from '@/hooks/revalidate'
 
 export const Content: GlobalConfig = {
     slug: "content",
+    hooks: {
+        afterChange: [revalidateContent],
+    },
     label: {
         ar: "المحتوى",
         en: "Content"
@@ -10,7 +14,16 @@ export const Content: GlobalConfig = {
         {
             name: 'stats',
             type: 'array',
-            label: 'Website Statistics',
+            labels: {
+                singular: {
+                    en: 'Statistic',
+                    ar: 'إحصائية'
+                },
+                plural: {
+                    en: 'Website Statistics',
+                    ar: 'إحصائيات الموقع'
+                }
+            },
             minRows: 1,
             maxRows: 4,
             fields: [
@@ -19,13 +32,19 @@ export const Content: GlobalConfig = {
                     type: 'text',
                     required: true,
                     localized: true,
-                    label: 'Title'
+                    label: {
+                        en: 'Title',
+                        ar: 'العنوان'
+                    }
                 },
                 {
                     name: 'number',
                     type: 'text',
                     required: true,
-                    label: 'Number',
+                    label: {
+                        en: 'Number',
+                        ar: 'الرقم'
+                    },
                     admin: {
                         description: 'Examples: 150+, 98%, 24/7, etc.'
                     }
@@ -35,42 +54,88 @@ export const Content: GlobalConfig = {
         {
             name: 'contact',
             type: 'group',
-            label: 'Contact Information',
+            label: {
+                en: 'Contact Information',
+                ar: 'معلومات التواصل'
+            },
             fields: [
                 {
-                    name: 'whatsapp',
-                    type: 'text',
-                    required: true,
-                    label: 'WhatsApp Number',
-                    admin: {
-                        description: 'Include country code (e.g., +966555123456)'
-                    }
-                },
-                {
-                    name: 'email',
-                    type: 'email',
-                    required: true,
-                    label: 'Email Address'
-                },
-                {
-                    name: 'address',
-                    type: 'group',
-                    label: 'Address',
+                    type: "row",
                     fields: [
                         {
-                            name: 'title',
+                            name: 'whatsapp',
                             type: 'text',
                             required: true,
-                            localized: true,
-                            label: 'Address Title'
+                            label: {
+                                en: 'WhatsApp Number',
+                                ar: 'رقم الواتساب'
+                            }
                         },
                         {
-                            name: 'link',
-                            type: 'text',
+                            name: 'email',
+                            type: 'email',
                             required: true,
-                            label: 'Map Link',
+                            label: {
+                                en: 'Email Address',
+                                ar: 'البريد الإلكتروني'
+                            }
+                        },
+                        {
+                            name: 'address',
+                            type: 'text',
+                            label: {
+                                en: 'Address',
+                                ar: 'العنوان'
+                            },
+                            localized: true,
+                        }
+                    ]
+                },
+
+            ]
+        },
+        {
+            name: "social_links",
+            type: "group",
+            label: {
+                en: 'Social Media Links',
+                ar: 'روابط التواصل الاجتماعي'
+            },
+            fields: [
+                {
+                    type: "row",
+                    fields: [
+                        {
+                            name: 'instagram',
+                            type: 'text',
+                            label: {
+                                en: 'Instagram URL',
+                                ar: 'رابط انستقرام'
+                            },
                             admin: {
-                                description: 'Google Maps or other map service URL'
+                                description: 'Full Instagram profile URL (e.g., https://instagram.com/username)'
+                            }
+                        },
+                        {
+                            name: 'linkedin',
+                            type: 'text',
+                            label: {
+                                en: 'LinkedIn URL',
+                                ar: 'رابط لينكد إن'
+                            },
+                            admin: {
+                                description: 'Full LinkedIn profile URL (e.g., https://linkedin.com/company/name)'
+                            }
+                        },
+                        {
+                            name: 'tiktok',
+                            type: 'text',
+                            label: {
+                                en: 'TikTok URL',
+                                ar: 'رابط تيك توك'
+                            },
+                            admin: {
+                                description: 'Full TikTok profile URL (e.g., https://tiktok.com/@username)'
                             }
                         }
                     ]

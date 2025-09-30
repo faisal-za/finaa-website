@@ -1,29 +1,12 @@
 "use server";
+import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { headers } from 'next/headers'
 import { z } from 'zod'
 import rateLimit from '@/lib/rate-limit'
 import type { ContactUs } from '@/payload-types'
-
-export async function getServices(locale?: string) {
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-
-  try {
-    const services = await payload.find({
-      collection: 'services',
-      limit: 10,
-      sort: '-createdAt',
-      locale: (locale as 'ar' | 'en') || 'en',
-    })
-
-    return services.docs
-  } catch (error) {
-    console.error('Error fetching services:', error)
-    return []
-  }
-}
 
 export async function getProjects(locale?: string) {
   const payloadConfig = await config
@@ -44,6 +27,31 @@ export async function getProjects(locale?: string) {
     return []
   }
 }
+
+// Cached versions with revalidation
+export const getCachedProjects = cache(
+  unstable_cache(
+    async (locale?: string) => getProjects(locale),
+    ['projects'],
+    { revalidate: 3600, tags: ['projects'] }
+  )
+)
+
+export const getCachedCategories = cache(
+  unstable_cache(
+    async (locale?: string) => getCategories(locale),
+    ['categories'],
+    { revalidate: 3600, tags: ['categories'] }
+  )
+)
+
+export const getCachedContent = cache(
+  unstable_cache(
+    async (locale?: string) => getContent(locale),
+    ['content'],
+    { revalidate: 1800, tags: ['content'] }
+  )
+)
 
 export async function getCategories(locale?: string) {
   const payloadConfig = await config
@@ -77,7 +85,7 @@ export async function getContent(locale?: string) {
     return content
   } catch (error) {
     console.error('Error fetching content:', error)
-    return { stats: [], contact: undefined }
+    return { stats: [], contact: undefined, social_links: undefined }
   }
 }
 
@@ -147,116 +155,52 @@ export async function submitContactForm(formData: {
   message: string
 }) {
   try {
-    // Get client IP for rate limiting
-    const clientIP = await getClientIP()
-
-    // Rate limiting checks
-    try {
-      await contactFormLimiter.check(3, `contact_${clientIP}`) // 3 submissions per minute
-      await contactFormDailyLimiter.check(10, `contact_daily_${clientIP}`) // 10 submissions per day
-    } catch (rateLimitError) {
-      return {
-        success: false,
-        error: 'Too many requests. Please try again later.',
-        rateLimited: true
-      }
-    }
-
-    // Validate and sanitize input data
-    const validationResult = contactFormSchema.safeParse({
-      name: sanitizeInput(formData.name),
-      email: formData.email ? sanitizeInput(formData.email) : '',
-      phone: formData.phone ? sanitizeInput(formData.phone) : '',
-      projectType: formData.projectType || '',
-      message: sanitizeInput(formData.message),
-    })
-
-    if (!validationResult.success) {
-      return {
-        success: false,
-        error: 'Invalid form data',
-        validationErrors: validationResult.error.issues
-      }
-    }
-
-    const sanitizedData = validationResult.data
-
-    // Additional security checks
-    const suspiciousPatterns = [
-      /script/i,
-      /javascript/i,
-      /onclick/i,
-      /onerror/i,
-      /eval\(/i,
-      /document\./i,
-      /window\./i,
-      /<[^>]*>/g, // HTML tags
-    ]
-
-    const textToCheck = `${sanitizedData.name} ${sanitizedData.email} ${sanitizedData.message}`
-
-    if (suspiciousPatterns.some(pattern => pattern.test(textToCheck))) {
-      return {
-        success: false,
-        error: 'Invalid content detected',
-        security: true
-      }
-    }
-
-    // Check for spam keywords
-    const spamKeywords = [
-      'viagra', 'casino', 'lottery', 'winner', 'congratulations',
-      'bitcoin', 'cryptocurrency', 'investment', 'urgent', 'click here'
-    ]
-
-    const messageWords = sanitizedData.message.toLowerCase().split(' ')
-    const spamCount = messageWords.filter(word =>
-      spamKeywords.some(spam => word.includes(spam))
-    ).length
-
-    if (spamCount > 2) {
-      return {
-        success: false,
-        error: 'Message flagged as spam',
-        spam: true
-      }
-    }
-
     const payloadConfig = await config
     const payload = await getPayload({ config: payloadConfig })
-
-    // Store form submission with metadata
     const headersList = await headers()
-    const submissionData: Omit<ContactUs, 'id' | 'createdAt' | 'updatedAt'> = {
-      name: sanitizedData.name,
-      email: sanitizedData.email || undefined,
-      phone: sanitizedData.phone || undefined,
-      projectType: sanitizedData.projectType as ContactUs['projectType'] || undefined,
-      message: sanitizedData.message,
-      submittedAt: new Date().toISOString(),
-      clientIP: clientIP,
-      userAgent: headersList.get('user-agent') || 'unknown',
-      status: 'new',
+    const clientIP = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
+
+    // Basic rate limiting - 5 submissions per minute per IP
+    try {
+      await contactFormLimiter.check(5, `contact_${clientIP}`)
+    } catch {
+      return {
+        success: false,
+        error: 'Too many requests. Please try again later.'
+      }
     }
 
-    // Log the submission securely (without sensitive data in logs)
-    console.log('Contact form submission received:', {
-      timestamp: submissionData.submittedAt,
-      hasName: !!sanitizedData.name,
-      hasEmail: !!sanitizedData.email,
-      hasPhone: !!sanitizedData.phone,
-      hasMessage: !!sanitizedData.message,
-      messageLength: sanitizedData.message.length,
-      clientIP: clientIP.replace(/\d+$/, 'xxx'), // Partial IP for privacy
-    })
+    // Basic sanitization - remove dangerous HTML/script tags
+    const sanitize = (text: string) => text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').trim()
+
+    // Find category by slug if projectType is provided
+    let categoryId: number | undefined = undefined
+    if (formData.projectType) {
+      const categories = await payload.find({
+        collection: 'categories',
+        where: {
+          slug: { equals: formData.projectType }
+        },
+        limit: 1
+      })
+      if (categories.docs.length > 0) {
+        categoryId = categories.docs[0].id
+      }
+    }
 
     // Save to ContactUs collection
-    const contact = await payload.create({
-      collection: 'contactUs',
-      data: submissionData
+    await payload.create({
+      collection: 'contact-us',
+      data: {
+        name: sanitize(formData.name),
+        email: formData.email ? sanitize(formData.email) : undefined,
+        phone: formData.phone ? sanitize(formData.phone) : undefined,
+        projectType: categoryId,
+        message: sanitize(formData.message),
+        clientIP: clientIP,
+        userAgent: headersList.get('user-agent') || 'unknown',
+      }
     })
-
-    console.log('Contact form saved to database:', { id: contact.id })
 
     return {
       success: true,
@@ -264,11 +208,7 @@ export async function submitContactForm(formData: {
     }
 
   } catch (error) {
-    console.error('Error submitting contact form:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date(),
-    })
-
+    console.error('Error submitting contact form:', error)
     return {
       success: false,
       error: 'Failed to submit form. Please try again later.'

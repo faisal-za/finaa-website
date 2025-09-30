@@ -46,6 +46,14 @@ input, textarea, select, button {
 }
 
 input::placeholder,
+label,
+a,
+h1,
+span,
+input,
+option,
+select,
+.rs__input,
 textarea::placeholder {
     font-family: "MyBrandFont", "Almarai", sans-serif !important;
     line-height: 1.8;
@@ -246,10 +254,6 @@ td {
     border-radius: 10px;
 }
 
-.list-header__title-actions {
-    margin-bottom: 0;
-}
-
 .nav-group__toggle svg {
     flex-shrink: 0;
     margin-top: 1px;
@@ -351,12 +355,7 @@ label.field-label {
 }
 
 .nav-group .nav__link[id*='nav-global-content']::before {
-    mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/wrench.svg');
-}
-
-.app-header {
-    border-bottom: 1px solid;
-    opacity: 10px;
+    mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/info.svg');
 }
 
 .collection-list {

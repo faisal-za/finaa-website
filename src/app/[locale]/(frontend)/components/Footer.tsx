@@ -2,11 +2,25 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import { Phone, Mail, MapPin, Instagram, Linkedin, } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { Link } from '@/i18n/routing'
+import TikTokIcon from '@/components/icons/TikTokIcon'
 
-const Footer = () => {
+interface FooterProps {
+  contact?: {
+    whatsapp?: string | null
+    email?: string | null
+    address?: string | null
+  }
+  socialLinks?: {
+    instagram?: string | null
+    linkedin?: string | null
+    tiktok?: string | null
+  }
+}
+
+const Footer = ({ contact, socialLinks }: FooterProps) => {
   const locale = useLocale()
   const t = useTranslations('footer')
   const navT = useTranslations('navigation')
@@ -26,11 +40,10 @@ const Footer = () => {
     t('servicesList.consultation')
   ]
 
-  const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' }
+  const socialLinksArray = [
+    ...(socialLinks?.instagram ? [{ icon: Instagram, href: socialLinks.instagram, label: 'Instagram' }] : []),
+    ...(socialLinks?.linkedin ? [{ icon: Linkedin, href: socialLinks.linkedin, label: 'LinkedIn' }] : []),
+    ...(socialLinks?.tiktok ? [{ icon: TikTokIcon, href: socialLinks.tiktok, label: 'TikTok' }] : []),
   ]
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -122,39 +135,40 @@ const Footer = () => {
               <div className={`absolute -bottom-2 w-12 h-0.5 bg-[#9c5748] ${locale === 'ar' ? 'right-0' : 'left-0'}`}></div>
             </h3>
             <div className="space-y-4">
-              <a
-                href="https://maps.google.com/?q=Riyadh,+Saudi+Arabia"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
-              >
-                <MapPin className="w-5 h-5 text-[#9c5748] mt-1 flex-shrink-0 group-hover:text-white" />
-                <div>
-                  <p>{locale === 'ar' ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia'}</p>
+              {contact?.address && (
+                <div className="flex items-start gap-3 text-gray-300">
+                  <MapPin className="w-5 h-5 text-[#9c5748] mt-1 flex-shrink-0" />
+                  <div>
+                    <p>{contact.address}</p>
+                  </div>
                 </div>
-              </a>
+              )}
 
-              <a
-                href="https://wa.me/966501234567"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
-              >
-                <Phone className="w-5 h-5 text-[#9c5748] flex-shrink-0 group-hover:text-white" />
-                <div>
-                  <p dir="ltr">+966 50 123 4567</p>
-                </div>
-              </a>
+              {contact?.whatsapp && (
+                <a
+                  href={`https://wa.me/${contact.whatsapp.replace(/\s+/g, '').replace(/[^\d+]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
+                >
+                  <Phone className="w-5 h-5 text-[#9c5748] flex-shrink-0 group-hover:text-white" />
+                  <div>
+                    <p dir="ltr">{contact.whatsapp}</p>
+                  </div>
+                </a>
+              )}
 
-              <a
-                href="mailto:info@finaa.sa"
-                className="flex items-center gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
-              >
-                <Mail className="w-5 h-5 text-[#9c5748] flex-shrink-0 group-hover:text-white" />
-                <div>
-                  <p>info@finaa.sa</p>
-                </div>
-              </a>
+              {contact?.email && (
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-3 text-gray-300 hover:text-[#9c5748] transition-colors cursor-pointer group"
+                >
+                  <Mail className="w-5 h-5 text-[#9c5748] flex-shrink-0 group-hover:text-white" />
+                  <div>
+                    <p>{contact.email}</p>
+                  </div>
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -168,15 +182,17 @@ const Footer = () => {
               © {currentYear} {t('copyright')}
             </div>
             <div className="flex gap-4">
-              {socialLinks.map((social, index) => (
-                <Link
+              {socialLinksArray.map((social, index) => (
+                <a
                   key={index}
                   href={social.href}
-                  className="w-10 h-10 bg-[#9c5748] rounded-full flex items-center justify-center hover:bg-white hover:text-[#302c30] transition-all duration-300"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 flex items-center rounded-full bg-[#9c5748] justify-center hover:bg-white hover:text-[#302c30] transition-all duration-300"
                   aria-label={social.label}
                 >
-                  <social.icon />
-                </Link>
+                  <social.icon className="w-5 h-5" />
+                </a>
               ))}
             </div>
           </div>

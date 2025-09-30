@@ -1,7 +1,11 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateProjects } from '@/hooks/revalidate'
 
 export const Projects: CollectionConfig = {
     slug: 'projects',
+    hooks: {
+        afterChange: [revalidateProjects],
+    },
     labels: {
         singular: {
             en: 'Project',
@@ -97,8 +101,26 @@ export const Projects: CollectionConfig = {
             admin: {
                 position: "sidebar"
             },
-            type: "text",
-            required: true
+            type: "group",
+            required: true,
+            fields: [
+                {
+                    name: "title",
+                    type: "text",
+                    label: {
+                        en: "Title",
+                        ar: "النص"
+                    }
+                },
+                {
+                    name: "link",
+                    type: "text",
+                    label: {
+                        en: "Link",
+                        ar: "الرابط"
+                    }
+                }
+            ]
         },
         {
             name: "end_date",
@@ -118,9 +140,15 @@ export const Projects: CollectionConfig = {
             name: "more_details",
             type: "array",
             maxRows: 10,
-            label: {
-                ar: "تفاصيل المشروع",
-                en: "Proejct Details"
+            labels: {
+                singular: {
+                    ar: "فقرة",
+                    en: "Point"
+                },
+                plural: {
+                    ar: "تفاصيل المشروع",
+                    en: "Proejct Details"
+                }
             },
             fields: [
                 {

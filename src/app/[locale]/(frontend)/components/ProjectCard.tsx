@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { MapPin, Calendar, Maximize2, DotIcon, X } from 'lucide-react'
+import { MapPin, ChevronDown, DotIcon, X } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -188,8 +188,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       priority={index < 3 && idx === 0}
-                      onLoad={() => console.log('Image loaded:', img.image?.url, 'at index:', idx)}
-                      onError={() => console.error('Image failed to load:', img.image?.url, 'at index:', idx)}
+                      loading={index < 3 && idx === 0 ? 'eager' : 'lazy'}
                     />
                   </div>
                 </CarouselItem>
@@ -228,9 +227,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                           alt=""
                           fill
                           className="object-cover"
-                          sizes="100px"
-                          onLoad={() => console.log('Thumbnail loaded:', img.image?.url, 'at index:', idx)}
-                          onError={() => console.error('Thumbnail failed to load:', img.image?.url, 'at index:', idx)}
+                          sizes="64px"
+                          quality={60}
+                          loading={idx < 4 ? 'eager' : 'lazy'}
+                          placeholder="blur"
+                          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
                         />
                       </button>
                     </CarouselItem>
@@ -248,7 +249,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             }}
             className="lg:hidden absolute bottom-4 right-4 bg-white/90 hover:bg-white text-[#302c30] p-2 rounded-full transition-all duration-300 z-10"
           >
-            <Maximize2 className="w-4 h-4" />
+            <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
           </button>
         </div>
 
@@ -267,22 +268,27 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             {project.description}
           </p>
 
-          {/* Project Meta Info */}
-          {/* <div className="flex flex-wrap gap-4 items-center text-sm">
-            {project.location && (
+          {/* Project Meta Info - Only show on mobile/tablet */}
+          <div className="lg:hidden flex flex-wrap gap-4 items-center text-sm">
+            {project.location?.title && (
               <div className="flex items-center gap-1.5 text-[#505248]">
                 <MapPin className="w-4 h-4" />
-                <span>{project.location}</span>
-              </div>
-            )}
-            {project.year && (
-              <div className="flex items-center gap-1.5 text-[#505248]">
-                <Calendar className="w-4 h-4" />
-                <span>{project.year}</span>
+                {project.location?.link ? (
+                  <a
+                    href={project.location.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#9c5748] transition-colors"
+                  >
+                    {project.location.title}
+                  </a>
+                ) : (
+                  <span>{project.location.title}</span>
+                )}
               </div>
             )}
             {project.categories && project.categories.length > 0 && (
-              <div className="">
+              <div className="flex gap-2">
                 {project.categories.map((category: any) => (
                   <p
                     key={category.id}
@@ -293,7 +299,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 ))}
               </div>
             )}
-          </div> */}
+          </div>
 
           {/* Project Details - Only show on mobile/tablet when expanded */}
           {project.more_details && project.more_details.length > 0 && (
@@ -367,16 +373,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
 
                   {/* Project Meta Info */}
                   <div className="flex flex-wrap gap-4 items-center text-sm mb-6">
-                    {project.location && (
+                    {project.location?.title && (
                       <div className="flex items-center gap-1.5 text-[#505248]">
                         <MapPin className="w-4 h-4" />
-                        <span>{project.location}</span>
-                      </div>
-                    )}
-                    {project.year && (
-                      <div className="flex items-center gap-1.5 text-[#505248]">
-                        <Calendar className="w-4 h-4" />
-                        <span>{project.year}</span>
+                        {project.location?.link ? (
+                          <a
+                            href={project.location.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-[#9c5748] transition-colors"
+                          >
+                            {project.location.title}
+                          </a>
+                        ) : (
+                          <span>{project.location.title}</span>
+                        )}
                       </div>
                     )}
                     {project.categories && project.categories.length > 0 && (
@@ -480,9 +491,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                                   alt=""
                                   fill
                                   className="object-cover"
-                                  sizes="100px"
+                                  sizes="64px"
+                                  quality={60}
+                                  loading={idx < 4 ? 'eager' : 'lazy'}
                                   placeholder="blur"
-                                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
                                 />
                               </button>
                             </CarouselItem>

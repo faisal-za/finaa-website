@@ -68,8 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     projects: Project;
-    services: Service;
-    contactUs: ContactUs;
+    'contact-us': ContactUs;
     categories: Category;
     media: Media;
     users: User;
@@ -80,8 +79,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
-    contactUs: ContactUsSelect<false> | ContactUsSelect<true>;
+    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -141,7 +139,10 @@ export interface Project {
       }[]
     | null;
   categories: (number | Category)[];
-  location: string;
+  location: {
+    title?: string | null;
+    link?: string | null;
+  };
   end_date?: string | null;
   more_details?:
     | {
@@ -185,36 +186,20 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
- */
-export interface Service {
-  id: number;
-  title: string;
-  image: number | Media;
-  description?: string | null;
-  slug?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contactUs".
+ * via the `definition` "contact-us".
  */
 export interface ContactUs {
   id: number;
   name: string;
   email?: string | null;
   phone?: string | null;
-  projectType?: ('residential' | 'commercial' | 'institutional' | 'tourism' | 'other') | null;
+  /**
+   * Select the category that best describes this project inquiry
+   */
+  projectType?: (number | null) | Category;
   message: string;
-  submittedAt: string;
   clientIP?: string | null;
   userAgent?: string | null;
-  status?: ('new' | 'in_progress' | 'replied' | 'closed') | null;
-  /**
-   * Internal notes for team members (not visible to client)
-   */
-  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -257,11 +242,7 @@ export interface PayloadLockedDocument {
         value: number | Project;
       } | null)
     | ({
-        relationTo: 'services';
-        value: number | Service;
-      } | null)
-    | ({
-        relationTo: 'contactUs';
+        relationTo: 'contact-us';
         value: number | ContactUs;
       } | null)
     | ({
@@ -333,7 +314,12 @@ export interface ProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   categories?: T;
-  location?: T;
+  location?:
+    | T
+    | {
+        title?: T;
+        link?: T;
+      };
   end_date?: T;
   more_details?:
     | T
@@ -347,19 +333,7 @@ export interface ProjectsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
- */
-export interface ServicesSelect<T extends boolean = true> {
-  title?: T;
-  image?: T;
-  description?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contactUs_select".
+ * via the `definition` "contact-us_select".
  */
 export interface ContactUsSelect<T extends boolean = true> {
   name?: T;
@@ -367,11 +341,8 @@ export interface ContactUsSelect<T extends boolean = true> {
   phone?: T;
   projectType?: T;
   message?: T;
-  submittedAt?: T;
   clientIP?: T;
   userAgent?: T;
-  status?: T;
-  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -477,18 +448,23 @@ export interface Content {
       }[]
     | null;
   contact: {
-    /**
-     * Include country code (e.g., +966555123456)
-     */
     whatsapp: string;
     email: string;
-    address: {
-      title: string;
-      /**
-       * Google Maps or other map service URL
-       */
-      link: string;
-    };
+    address?: string | null;
+  };
+  social_links?: {
+    /**
+     * Full Instagram profile URL (e.g., https://instagram.com/username)
+     */
+    instagram?: string | null;
+    /**
+     * Full LinkedIn profile URL (e.g., https://linkedin.com/company/name)
+     */
+    linkedin?: string | null;
+    /**
+     * Full TikTok profile URL (e.g., https://tiktok.com/@username)
+     */
+    tiktok?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -510,12 +486,14 @@ export interface ContentSelect<T extends boolean = true> {
     | {
         whatsapp?: T;
         email?: T;
-        address?:
-          | T
-          | {
-              title?: T;
-              link?: T;
-            };
+        address?: T;
+      };
+  social_links?:
+    | T
+    | {
+        instagram?: T;
+        linkedin?: T;
+        tiktok?: T;
       };
   updatedAt?: T;
   createdAt?: T;

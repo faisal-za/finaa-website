@@ -18,6 +18,16 @@ const Hero = ({ stats = [] }: HeroProps) => {
   const statsT = useTranslations('whyUs.stats')
   const locale = useLocale()
 
+  // Helper function to format numbers using Intl for proper localization
+  const formatNumber = (str: string, locale: string): string => {
+    return str.replace(/\d+/g, (match) => {
+      const num = parseInt(match)
+      return new Intl.NumberFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
+        useGrouping: false
+      }).format(num)
+    })
+  }
+
   // Fallback to hardcoded values if no stats provided
   const displayStats = stats.length > 0 ? stats : [
     { title: statsT('projects'), number: '120+' },
@@ -59,12 +69,12 @@ const Hero = ({ stats = [] }: HeroProps) => {
       <section id="hero" className="relative bg-gradient-to-b from-[#f7f2ee] mt-18 to-white overflow-hidden">
         {/* Geometric Pattern Background */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <div className="absolute top-4 right-10 sm:top-8 sm:right-8 aspect-square w-24 sm:w-24 lg:w-32">
+          <div className={`absolute top-4 ${locale == "ar" ? "left" : "right"}-10 sm:top-8 sm:right-8 aspect-square w-24 sm:w-24 lg:w-32`}>
             <svg viewBox="0 0 200 200" className="w-full h-full">
               <path d="M40,40 L160,40 L180,60 L180,180 L60,180 L40,160 Z" fill="#302c30" />
             </svg>
           </div>
-          <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 aspect-square w-24 sm:w-24 lg:w-24">
+          <div className={`absolute bottom-4 ${locale == "ar" ? "right" : "left"}-4 sm:bottom-8 sm:left-8 aspect-square w-24 sm:w-24 lg:w-24`}>
             <svg viewBox="0 0 200 200" className="w-full h-full">
               <path d="M20,80 L80,20 L180,20 L180,120 L120,180 L20,180 Z" fill="#9c5748" />
             </svg>
@@ -112,7 +122,7 @@ const Hero = ({ stats = [] }: HeroProps) => {
                 return (
                   <div key={index} className={`text-center ${locale === 'ar' ? 'lg:text-right' : 'lg:text-left'}`}>
                     <div className="flex flex-row items-center justify-center sm:justify-start text-xl sm:text-2xl lg:text-3xl font-bold text-[#302c30]">
-                      {prefix && <p>{prefix}</p>}
+                      {prefix && <p>{formatNumber(prefix, locale)}</p>}
                       <CountUp
                         from={0}
                         to={number}
@@ -120,7 +130,7 @@ const Hero = ({ stats = [] }: HeroProps) => {
                         direction="up"
                         duration={0.5 + index * 0.25}
                         locale={locale === 'ar' ? 'ar-SA' : 'en-US'} />
-                      {suffix && <p>{suffix}</p>}
+                      {suffix && <p>{formatNumber(suffix, locale)}</p>}
                     </div>
                     <div className="text-sm text-[#505248] mt-1">{stat.title}</div>
                   </div>

@@ -1,7 +1,11 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCategories } from '@/hooks/revalidate'
 
 export const Categories: CollectionConfig = {
     slug: 'categories',
+    hooks: {
+        afterChange: [revalidateCategories],
+    },
     labels: {
         singular: {
             en: 'Category',

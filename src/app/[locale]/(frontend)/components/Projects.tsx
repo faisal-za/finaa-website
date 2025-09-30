@@ -68,8 +68,8 @@ const Projects: React.FC<ProjectsProps> = ({ projects, categories }) => {
               onClick={() => setSelectedCategory(category.id || category.slug)}
               className={
                 selectedCategory === (category.id || category.slug)
-                  ? 'bg-[#302c30] text-white hover:bg-[#505248]'
-                  : 'border-[#302c30] text-[#302c30] hover:bg-[#f7f2ee]'
+                  ? 'bg-[#302c30] text-white hover:bg-[#505248] cursor-pointer'
+                  : 'border-[#302c30] text-[#302c30] hover:bg-[#f7f2ee] cursor-pointer'
               }
             >
               {category.name || 'Unnamed Category'}

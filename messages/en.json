@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "Finaa Design & Build - We Design and Build Your Future",
+    "title": "Finaa Design & Build - Design and Build Your Future",
     "description": "Finaa Design & Build - Leading company in real estate development and general contracting in Saudi Arabia",
     "keywords": "real estate development, construction, architectural design, building, Saudi Arabia, contracting"
   },
@@ -13,7 +13,7 @@
     "contactUs": "Contact Us"
   },
   "hero": {
-    "title": "We Design and Build",
+    "title": "Design and Build",
     "subtitle": "Your Future",
     "description": "Finaa Design & Build provides comprehensive solutions in real estate development and general contracting with the highest standards of quality and professionalism",
     "getQuote": "Get a Quote",
@@ -38,8 +38,12 @@
       "description": "Developing integrated real estate projects from planning and design to final delivery to clients"
     },
     "projectManagement": {
-      "title": "Engineering Supervision",
-      "description": "Specialized supervision of all project phases to ensure achieving the highest quality standards on time"
+      "title": "Project Management",
+      "description": "Comprehensive project management ensuring timely delivery and quality control throughout all phases"
+    },
+    "constructionSupervision": {
+      "title": "Construction Supervision",
+      "description": "Professional on-site supervision to ensure compliance with design specifications and quality standards"
     },
     "consultation": {
       "title": "Engineering Consultation",
@@ -117,6 +121,9 @@
         "emailRequired": "Please enter a valid email",
         "messageRequired": "Message must be more than 10 characters"
       },
+      "success": "Message sent successfully!",
+      "error": "Failed to send message. Please try again.",
+      "sending": "Sending...",
       "projectTypes": {
         "residential": "Residential",
         "commercial": "Commercial",

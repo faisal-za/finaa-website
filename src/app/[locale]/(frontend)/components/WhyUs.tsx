@@ -16,6 +16,16 @@ const WhyUs = ({ stats = [] }: WhyUsProps) => {
   const locale = useLocale()
   const t = useTranslations('whyUs')
 
+  // Helper function to format numbers using Intl for proper localization
+  const formatNumber = (str: string, locale: string): string => {
+    return str.replace(/\d+/g, (match) => {
+      const num = parseInt(match)
+      return new Intl.NumberFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
+        useGrouping: false
+      }).format(num)
+    })
+  }
+
   // Helper function to extract numeric value from stat number
   const extractNumber = (numberStr: string): number => {
     const match = numberStr.match(/\d+/)
@@ -33,7 +43,7 @@ const WhyUs = ({ stats = [] }: WhyUsProps) => {
 
     return { prefix: beforeNum, suffix: afterNum }
   }
-  console.log("stats", stats)
+
   // Fallback to hardcoded values if no stats provided or convert dynamic stats
   const displayStats = stats.length > 0 ? stats.map(stat => {
     const { prefix, suffix } = extractPrefixSuffix(stat.number)
@@ -210,7 +220,7 @@ const WhyUs = ({ stats = [] }: WhyUsProps) => {
             {displayStats.map((stat, index) => (
               <div key={index} className="group">
                 <div className="text-3xl lg:text-4xl font-bold text-[#9c5748] mb-3 group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
-                  {stat.prefix && <span>{stat.prefix}</span>}
+                  {stat.prefix && <span>{formatNumber(stat.prefix, locale)}</span>}
                   {typeof stat.value === 'number' ? (
                     <CountUp
                       from={0}
@@ -220,9 +230,9 @@ const WhyUs = ({ stats = [] }: WhyUsProps) => {
                       locale={locale === 'ar' ? 'ar-SA' : 'en-US'}
                     />
                   ) : (
-                    <span>{stat.value}</span>
+                    <span>{formatNumber(stat.value, locale)}</span>
                   )}
-                  {stat.suffix && <span>{stat.suffix}</span>}
+                  {stat.suffix && <span>{formatNumber(stat.suffix, locale)}</span>}
                 </div>
                 <div className="text-[#505248] text-base lg:text-lg font-medium">{stat.label}</div>
                 <div className="w-8 h-0.5 bg-[#9c5748] mx-auto mt-3 opacity-60 group-hover:opacity-100 group-hover:w-12 transition-all duration-300"></div>

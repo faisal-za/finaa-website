@@ -17,14 +17,14 @@ const Services = ({ services }: ServicesProps) => {
       description: t('architecturalDesign.description'),
     },
     {
-      id: 'realEstateDevelopment',
-      name: t('realEstateDevelopment.title'),
-      description: t('realEstateDevelopment.description'),
-    },
-    {
       id: 'projectManagement',
       name: t('projectManagement.title'),
       description: t('projectManagement.description'),
+    },
+    {
+      id: 'constructionSupervision',
+      name: t('constructionSupervision.title'),
+      description: t('constructionSupervision.description'),
     },
     {
       id: 'interiorDesign',
@@ -36,7 +36,7 @@ const Services = ({ services }: ServicesProps) => {
   const displayServices = services.length > 0 ? services : defaultServices
 
   return (<FadeContent duration={500}>
-    <section id="services" className="py-18 lg:py-32 bg-white">
+    <section id="services" className="py-24 sm:py-40 bg-white">
       <div className="container mx-auto px-4 sm:px-0 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
