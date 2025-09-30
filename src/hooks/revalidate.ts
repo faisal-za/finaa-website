@@ -1,29 +1,18 @@
 import type { CollectionAfterChangeHook, GlobalAfterChangeHook } from 'payload'
+import { revalidateTag } from 'next/cache'
 
 const revalidateCache = async (tags: string[]) => {
-  if (process.env.NODE_ENV !== 'production') return
-
-  const secret = process.env.REVALIDATION_SECRET
-  if (!secret) {
-    console.warn('REVALIDATION_SECRET not set, skipping cache revalidation')
-    return
-  }
-
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    const response = await fetch(`${baseUrl}/api/revalidate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ secret, tags }),
-    })
+    console.log(`🔄 Revalidating cache tags: ${tags.join(', ')}`)
 
-    if (!response.ok) {
-      console.error('Failed to revalidate cache:', await response.text())
+    // Direct revalidation using Next.js API - works in both dev and production
+    for (const tag of tags) {
+      revalidateTag(tag)
     }
+
+    console.log(`✅ Successfully revalidated: ${tags.join(', ')}`)
   } catch (error) {
-    console.error('Error revalidating cache:', error)
+    console.error('❌ Error revalidating cache:', error)
   }
 }
 
