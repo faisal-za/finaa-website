@@ -67,8 +67,9 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    projects: Project;
-    'contact-us': ContactUs;
+    'training-programs': TrainingProgram;
+    courses: Course;
+    enrollments: Enrollment;
     categories: Category;
     media: Media;
     users: User;
@@ -76,10 +77,15 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    'training-programs': {
+      courses: 'courses';
+    };
+  };
   collectionsSelect: {
-    projects: ProjectsSelect<false> | ProjectsSelect<true>;
-    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
+    'training-programs': TrainingProgramsSelect<false> | TrainingProgramsSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
+    enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -125,11 +131,11 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "projects".
+ * via the `definition` "training-programs".
  */
-export interface Project {
+export interface TrainingProgram {
   id: number;
-  name: string;
+  title: string;
   description: string;
   images?:
     | {
@@ -143,6 +149,7 @@ export interface Project {
     title?: string | null;
     link?: string | null;
   };
+  start_date?: string | null;
   end_date?: string | null;
   more_details?:
     | {
@@ -151,6 +158,11 @@ export interface Project {
       }[]
     | null;
   slug: string;
+  courses?: {
+    docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -186,20 +198,47 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-us".
+ * via the `definition` "courses".
  */
-export interface ContactUs {
+export interface Course {
   id: number;
-  name: string;
-  email?: string | null;
-  phone?: string | null;
+  title: string;
+  description: string;
+  trainingProgram: number | TrainingProgram;
+  instructor?: string | null;
   /**
-   * Select the category that best describes this project inquiry
+   * Course duration in hours
    */
-  projectType?: (number | null) | Category;
-  message: string;
-  clientIP?: string | null;
-  userAgent?: string | null;
+  duration?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  /**
+   * Maximum number of students allowed
+   */
+  maxEnrollments?: number | null;
+  status: 'draft' | 'published' | 'closed';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments".
+ */
+export interface Enrollment {
+  id: number;
+  user: number | User;
+  trainingProgram: number | TrainingProgram;
+  status: 'pending' | 'approved' | 'rejected' | 'completed' | 'cancelled';
+  enrolledAt?: string | null;
+  completedAt?: string | null;
+  /**
+   * Course completion progress percentage
+   */
+  progress?: number | null;
+  /**
+   * Additional notes or comments
+   */
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -209,6 +248,7 @@ export interface ContactUs {
  */
 export interface User {
   id: number;
+  role: 'admin' | 'trainee';
   updatedAt: string;
   createdAt: string;
   enableAPIKey?: boolean | null;
@@ -238,12 +278,16 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'projects';
-        value: number | Project;
+        relationTo: 'training-programs';
+        value: number | TrainingProgram;
       } | null)
     | ({
-        relationTo: 'contact-us';
-        value: number | ContactUs;
+        relationTo: 'courses';
+        value: number | Course;
+      } | null)
+    | ({
+        relationTo: 'enrollments';
+        value: number | Enrollment;
       } | null)
     | ({
         relationTo: 'categories';
@@ -301,10 +345,10 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "projects_select".
+ * via the `definition` "training-programs_select".
  */
-export interface ProjectsSelect<T extends boolean = true> {
-  name?: T;
+export interface TrainingProgramsSelect<T extends boolean = true> {
+  title?: T;
   description?: T;
   images?:
     | T
@@ -320,6 +364,7 @@ export interface ProjectsSelect<T extends boolean = true> {
         title?: T;
         link?: T;
       };
+  start_date?: T;
   end_date?: T;
   more_details?:
     | T
@@ -328,21 +373,39 @@ export interface ProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   slug?: T;
+  courses?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-us_select".
+ * via the `definition` "courses_select".
  */
-export interface ContactUsSelect<T extends boolean = true> {
-  name?: T;
-  email?: T;
-  phone?: T;
-  projectType?: T;
-  message?: T;
-  clientIP?: T;
-  userAgent?: T;
+export interface CoursesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  trainingProgram?: T;
+  instructor?: T;
+  duration?: T;
+  startDate?: T;
+  endDate?: T;
+  maxEnrollments?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments_select".
+ */
+export interface EnrollmentsSelect<T extends boolean = true> {
+  user?: T;
+  trainingProgram?: T;
+  status?: T;
+  enrolledAt?: T;
+  completedAt?: T;
+  progress?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -379,6 +442,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   enableAPIKey?: T;

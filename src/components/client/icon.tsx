@@ -6,14 +6,8 @@ import { useTheme } from '@payloadcms/ui';
 
 const Logo = () => {
 
-    const { theme } = useTheme()
-
     return (
-        <Image
-            src={theme == "dark" ? DarkLogo : DarkLogo}
-            alt={'SVG Image'}
-
-        />
+        <h3>O</h3>
     );
 };
 

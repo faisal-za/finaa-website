@@ -1,33 +1,33 @@
 import type { CollectionConfig } from 'payload'
 import { revalidateProjects } from '@/hooks/revalidate'
 
-export const Projects: CollectionConfig = {
-    slug: 'projects',
+export const TrainingProgram: CollectionConfig = {
+    slug: 'training-programs',
     hooks: {
         afterChange: [revalidateProjects],
     },
     labels: {
         singular: {
-            en: 'Project',
-            ar: 'مشروع',
+            en: 'Training Program',
+            ar: 'برنامج تدريبي',
         },
         plural: {
-            en: 'Projects',
-            ar: 'المشاريع',
+            en: 'Training Programs',
+            ar: 'البرامج التدريبية',
         },
     },
     admin: {
-        useAsTitle: 'name',
+        useAsTitle: 'title',
     },
     fields: [
         {
-            name: 'name',
+            name: 'title',
             type: 'text',
             required: true,
             localized: true,
             label: {
-                en: 'Name',
-                ar: 'الاسم',
+                en: 'Title',
+                ar: 'العنوان',
             },
         },
         {
@@ -123,21 +123,41 @@ export const Projects: CollectionConfig = {
             ]
         },
         {
+            name: "start_date",
+            type: "date",
+            label: {
+                ar: "تاريخ البداية",
+                en: "Start Date"
+            },
+            admin: {
+                position: "sidebar",
+                date: {
+                    minDate: new Date().toISOString(),
+                    pickerAppearance: "dayOnly",
+                }
+            }
+        },
+        {
             name: "end_date",
             label: {
-                ar: "تاريخ الإ‘نشاء",
+                ar: "تاريخ الانتهاء",
                 en: "End Date"
             },
             type: "date",
             admin: {
                 position: "sidebar",
                 date: {
-                    pickerAppearance: "monthOnly",
+                    minDate: new Date().toISOString(),
+                    pickerAppearance: "dayOnly",
                 }
             }
         },
         {
             name: "more_details",
+            label: {
+                ar: "تفاصيل البرنامج",
+                en: "Program Details"
+            },
             type: "array",
             maxRows: 10,
             labels: {
@@ -171,7 +191,18 @@ export const Projects: CollectionConfig = {
                 ar: 'الرابط',
             },
             admin: {
+                readOnly: true,
                 position: 'sidebar',
+            },
+        },
+        {
+            name: 'courses',
+            type: 'join',
+            collection: 'courses',
+            on: 'trainingProgram',
+            label: {
+                en: 'Courses',
+                ar: 'الدورات',
             },
         },
     ],

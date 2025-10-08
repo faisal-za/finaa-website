@@ -16,6 +16,32 @@ export const Users: CollectionConfig = {
   auth: { useAPIKey: true },
   fields: [
     // Email added by default
-    // Add more fields as needed
+    {
+      name: 'role',
+      type: 'select',
+      required: true,
+      localized: true,
+      label: {
+        en: 'Role',
+        ar: 'الدور',
+      },
+      options: [
+        {
+          label: {
+            en: 'Admin',
+            ar: 'مدير النظام',
+          },
+          value: 'admin',
+        },
+        {
+          label: {
+            en: 'Trainee',
+            ar: 'متدرب',
+          },
+          value: 'trainee',
+        },
+      ],
+      defaultValue: 'admin',
+    },
   ],
 }

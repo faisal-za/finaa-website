@@ -30,13 +30,17 @@
 
 body {
     font-family: "MyBrandFont", "Almarai", sans-serif !important;
-    line-height: 1.5; /* Increased line height for Arabic dots */
+    line-height: 1.5;
+    /* Increased line height for Arabic dots */
 }
 
 /* Ensure font applies to all form elements */
-input, textarea, select, button {
+input,
+textarea,
+select,
+button {
     font-family: "MyBrandFont", "Almarai", sans-serif !important;
-    line-height: 1.8; 
+    line-height: 1.8;
 }
 
 /* Placeholder text font */
@@ -54,6 +58,7 @@ input,
 option,
 select,
 .rs__input,
+.react-select,
 textarea::placeholder {
     font-family: "MyBrandFont", "Almarai", sans-serif !important;
     line-height: 1.8;
@@ -61,11 +66,14 @@ textarea::placeholder {
 
 /* Fix for Arabic text in all elements */
 * {
-    line-height: 1.6 !important; /* Global minimum line height */
+    line-height: 1.6 !important;
+    /* Global minimum line height */
 }
 
 /* Specific fix for table cells and nav items */
-td, th, .nav__link {
+td,
+th,
+.nav__link {
     line-height: 1.8 !important;
 }
 
@@ -210,7 +218,7 @@ button,
 a,
 .where-builder {
     border-radius: 9px !important;
-    
+
 }
 
 .pill {
@@ -264,8 +272,33 @@ td {
     padding-right: 1%;
 }
 
+#search-filter-input {
+    border: 0 !important;
+}
+
 .search-bar {
-    border-radius: 15px !important;
+    border-radius: 10px !important;
+}
+
+.date-time-picker .react-datepicker {
+    width: 100%;
+    font-weight: 400;
+}
+
+input,
+textarea,
+.rs__control {
+    border-radius: 10px !important;
+    border: 2px solid var(--color-base-200) !important;
+}
+
+.rs__input {
+    padding-left: 10rem !important;
+    border: 0 !important;
+}
+
+.list-header__title-and-actions {
+    place-items: center;
 }
 
 .app-header__localizer.localizer {
@@ -310,10 +343,10 @@ label.field-label {
 
 .nav-group .nav__link[id*='nav-user']::before,
 .nav-group .nav__link[id*='nav-media']::before,
-.nav-group .nav__link[id*='nav-project']::before,
+.nav-group .nav__link[id*='nav-training-program']::before,
 .nav-group .nav__link[id*='nav-categories']::before,
-.nav-group .nav__link[id*='nav-services']::before,
-.nav-group .nav__link[id*='nav-contact-us']::before, 
+.nav-group .nav__link[id*='nav-courses']::before,
+.nav-group .nav__link[id*='nav-enrollment']::before,
 .nav-group .nav__link[id*='nav-global-content']::before {
     content: '';
     display: inline-block;
@@ -338,11 +371,11 @@ label.field-label {
     mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/shield-user.svg');
 }
 
-.nav-group .nav__link[id*='nav-contact-us']::before {
+.nav-group .nav__link[id*='nav-enrollment']::before {
     mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/contact.svg');
 }
 
-.nav-group .nav__link[id*='nav-project']::before {
+.nav-group .nav__link[id*='nav-training-program']::before {
     mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/presentation.svg');
 }
 
@@ -350,7 +383,7 @@ label.field-label {
     mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/layout-dashboard.svg');
 }
 
-.nav-group .nav__link[id*='nav-services']::before {
+.nav-group .nav__link[id*='nav-courses']::before {
     mask-image: url('https://cdn.jsdelivr.net/npm/lucide-static@0.508.0/icons/wrench.svg');
 }
 

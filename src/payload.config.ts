@@ -1,5 +1,6 @@
 // storage-adapter-import-placeholder
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
+import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
@@ -10,9 +11,10 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { ContactUs } from './collections/ContactUs'
 import { Categories } from './collections/Categories'
-import { Projects } from './collections/Projects'
+import { TrainingProgram } from './collections/TrainingPrograms'
+import { Courses } from './collections/Courses'
+import { Enrollments } from './collections/Enrollments'
 
 import { Content } from './globals/Content'
 
@@ -71,8 +73,9 @@ export default buildConfig({
     fallback: true, // defaults to true
   },
   collections: [
-    Projects,
-    ContactUs,
+    TrainingProgram,
+    Courses,
+    Enrollments,
     Categories,
     Media,
     Users,
@@ -81,14 +84,19 @@ export default buildConfig({
     Content
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || '487asjdfioas$fsfsfsd',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: vercelPostgresAdapter({
-    pool: {
-      connectionString: process.env.DATABASE_URI,
-    },
+  // db: vercelPostgresAdapter({
+  //   pool: {
+  //     connectionString: process.env.DATABASE_URI,
+  //   },
+  // }),
+  db: sqliteAdapter({
+    client: {
+      url: "file:./payload.db",
+    }
   }),
   sharp,
   plugins: [

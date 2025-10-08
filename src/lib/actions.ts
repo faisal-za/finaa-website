@@ -3,56 +3,67 @@ import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
-import { headers } from 'next/headers'
-import { z } from 'zod'
-import rateLimit from '@/lib/rate-limit'
-import type { ContactUs } from '@/payload-types'
 
-export async function getProjects(locale?: string) {
+// Training Programs
+export async function getTrainingPrograms(locale?: string) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
   try {
-    const projects = await payload.find({
-      collection: 'projects',
-      limit: 6,
+    const programs = await payload.find({
+      collection: 'training-programs',
       depth: 2,
       sort: '-createdAt',
       locale: (locale as 'ar' | 'en') || 'en',
     })
 
-    return projects.docs
+    return programs.docs
   } catch (error) {
-    console.error('Error fetching projects:', error)
+    console.error('Error fetching training programs:', error)
     return []
   }
 }
 
-// Cached versions with revalidation
-export const getCachedProjects = cache(
+export const getCachedTrainingPrograms = cache(
   unstable_cache(
-    async (locale?: string) => getProjects(locale),
-    ['projects'],
-    { revalidate: 3600, tags: ['projects'] }
+    async (locale?: string) => getTrainingPrograms(locale),
+    ['training-programs'],
+    { revalidate: 3600, tags: ['training-programs'] }
   )
 )
 
-export const getCachedCategories = cache(
+// Courses
+export async function getCourses(locale?: string, trainingProgramId?: string | number) {
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  try {
+    const courses = await payload.find({
+      collection: 'courses',
+      depth: 2,
+      sort: '-createdAt',
+      locale: (locale as 'ar' | 'en') || 'en',
+      where: trainingProgramId ? {
+        trainingProgram: { equals: trainingProgramId }
+      } : undefined,
+    })
+
+    return courses.docs
+  } catch (error) {
+    console.error('Error fetching courses:', error)
+    return []
+  }
+}
+
+export const getCachedCourses = cache(
   unstable_cache(
-    async (locale?: string) => getCategories(locale),
-    ['categories'],
-    { revalidate: 3600, tags: ['categories'] }
+    async (locale?: string, trainingProgramId?: string | number) => getCourses(locale, trainingProgramId),
+    ['courses'],
+    { revalidate: 3600, tags: ['courses'] }
   )
 )
 
-export const getCachedContent = cache(
-  unstable_cache(
-    async (locale?: string) => getContent(locale),
-    ['content'],
-    { revalidate: 1800, tags: ['content'] }
-  )
-)
-
+// Categories
 export async function getCategories(locale?: string) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
@@ -60,7 +71,6 @@ export async function getCategories(locale?: string) {
   try {
     const categories = await payload.find({
       collection: 'categories',
-      limit: 20,
       sort: 'name',
       locale: (locale as 'ar' | 'en') || 'en',
     })
@@ -72,146 +82,86 @@ export async function getCategories(locale?: string) {
   }
 }
 
-export async function getContent(locale?: string) {
+export const getCachedCategories = cache(
+  unstable_cache(
+    async (locale?: string) => getCategories(locale),
+    ['categories'],
+    { revalidate: 3600, tags: ['categories'] }
+  )
+)
+
+// Enrollments
+export async function getUserEnrollments(userId: string | number) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
   try {
-    const content = await payload.findGlobal({
-      slug: 'content',
-      locale: (locale as 'ar' | 'en') || 'en',
+    const enrollments = await payload.find({
+      collection: 'enrollments',
+      depth: 2,
+      sort: '-enrolledAt',
+      where: {
+        user: { equals: userId }
+      },
     })
 
-    return content
+    return enrollments.docs
   } catch (error) {
-    console.error('Error fetching content:', error)
-    return { stats: [], contact: undefined, social_links: undefined }
+    console.error('Error fetching user enrollments:', error)
+    return []
   }
 }
 
-// Security schema for contact form validation
-const contactFormSchema = z.object({
-  name: z.string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be less than 100 characters')
-    .regex(/^[a-zA-Z\u0600-\u06FF\s]+$/, 'Name contains invalid characters'),
-  email: z.string()
-    .email('Invalid email format')
-    .max(255, 'Email must be less than 255 characters')
-    .optional()
-    .or(z.literal('')),
-  phone: z.string()
-    .regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number format')
-    .optional()
-    .or(z.literal('')),
-  projectType: z.enum(['residential', 'commercial', 'institutional', 'tourism', 'other'])
-    .optional()
-    .or(z.literal('')),
-  message: z.string()
-    .min(10, 'Message must be at least 10 characters')
-    .max(2000, 'Message must be less than 2000 characters')
-    .regex(/^[^<>{}]*$/, 'Message contains invalid characters'),
-})
-
-// Rate limiter instances
-const contactFormLimiter = rateLimit({
-  interval: 60 * 1000, // 1 minute
-  uniqueTokenPerInterval: 500,
-})
-
-const contactFormDailyLimiter = rateLimit({
-  interval: 24 * 60 * 60 * 1000, // 24 hours
-  uniqueTokenPerInterval: 1000,
-})
-
-function sanitizeInput(input: string): string {
-  return input
-    .trim()
-    .replace(/[<>{}]/g, '') // Remove potential script tags
-    .replace(/\s+/g, ' ') // Normalize whitespace
-}
-
-async function getClientIP(): Promise<string> {
-  const headersList = await headers()
-  const forwardedFor = headersList.get('x-forwarded-for')
-  const realIP = headersList.get('x-real-ip')
-
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim()
-  }
-
-  if (realIP) {
-    return realIP
-  }
-
-  return 'unknown'
-}
-
-export async function submitContactForm(formData: {
-  name: string
-  email?: string
-  phone?: string
-  projectType?: string
-  message: string
+export async function createEnrollment(data: {
+  user: string | number
+  trainingProgram: string | number
+  status?: string
 }) {
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
   try {
-    const payloadConfig = await config
-    const payload = await getPayload({ config: payloadConfig })
-    const headersList = await headers()
-    const clientIP = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
-
-    // Basic rate limiting - 5 submissions per minute per IP
-    try {
-      await contactFormLimiter.check(5, `contact_${clientIP}`)
-    } catch {
-      return {
-        success: false,
-        error: 'Too many requests. Please try again later.'
-      }
-    }
-
-    // Basic sanitization - remove dangerous HTML/script tags
-    const sanitize = (text: string) => text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').trim()
-
-    // Find category by slug if projectType is provided
-    let categoryId: number | undefined = undefined
-    if (formData.projectType) {
-      const categories = await payload.find({
-        collection: 'categories',
-        where: {
-          slug: { equals: formData.projectType }
-        },
-        limit: 1
-      })
-      if (categories.docs.length > 0) {
-        categoryId = categories.docs[0].id
-      }
-    }
-
-    // Save to ContactUs collection
-    await payload.create({
-      collection: 'contact-us',
+    const enrollment = await payload.create({
+      collection: 'enrollments',
       data: {
-        name: sanitize(formData.name),
-        email: formData.email ? sanitize(formData.email) : undefined,
-        phone: formData.phone ? sanitize(formData.phone) : undefined,
-        projectType: categoryId,
-        message: sanitize(formData.message),
-        clientIP: clientIP,
-        userAgent: headersList.get('user-agent') || 'unknown',
+        user: data.user,
+        trainingProgram: data.trainingProgram,
+        status: data.status || 'pending',
+        enrolledAt: new Date().toISOString(),
+        progress: 0,
       }
     })
 
-    return {
-      success: true,
-      message: 'Form submitted successfully'
-    }
-
+    return { success: true, enrollment }
   } catch (error) {
-    console.error('Error submitting contact form:', error)
+    console.error('Error creating enrollment:', error)
     return {
       success: false,
-      error: 'Failed to submit form. Please try again later.'
+      error: 'Failed to create enrollment'
+    }
+  }
+}
+
+export async function updateEnrollmentProgress(
+  enrollmentId: string | number,
+  progress: number
+) {
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  try {
+    const enrollment = await payload.update({
+      collection: 'enrollments',
+      id: enrollmentId,
+      data: { progress }
+    })
+
+    return { success: true, enrollment }
+  } catch (error) {
+    console.error('Error updating enrollment progress:', error)
+    return {
+      success: false,
+      error: 'Failed to update enrollment progress'
     }
   }
 }

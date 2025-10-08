@@ -40,7 +40,7 @@ const Contact = ({ contact }: ContactProps) => {
     phone: z.string()
       .min(1, { message: 'Phone number is required' })
       .max(20, { message: 'Phone too long' }),
-    projectType: z.string().optional(),
+    category: z.string().optional(),
     message: z.string()
       .min(10, { message: t('form.validation.messageRequired') })
       .max(2000, { message: 'Message too long' }),
@@ -51,7 +51,7 @@ const Contact = ({ contact }: ContactProps) => {
       name: "",
       email: "",
       phone: "",
-      projectType: "",
+      category: "",
       message: "",
     },
   })
@@ -65,7 +65,7 @@ const Contact = ({ contact }: ContactProps) => {
         name: values.name.trim(),
         email: values.email?.trim(),
         phone: values.phone?.trim(),
-        projectType: values.projectType,
+        category: values.category,
         message: values.message.trim(),
       })
 
@@ -269,10 +269,10 @@ const Contact = ({ contact }: ContactProps) => {
                   />
                 </div>
 
-                {/* Project Type - Full Width */}
+                {/* Category - Full Width */}
                 <FormField
                   control={form.control}
-                  name="projectType"
+                  name="category"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[#302c30] font-medium">{t('form.projectType')}</FormLabel>

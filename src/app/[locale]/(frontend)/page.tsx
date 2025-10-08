@@ -3,9 +3,8 @@ import Hero from './components/Hero'
 import Services from './components/Services'
 import Projects from './components/Projects'
 import WhyUsOption3 from './components/WhyUs'
-import Contact from './components/Contact'
 import Footer from './components/Footer'
-import { getCachedProjects, getCachedCategories, getCachedContent } from '@/lib/actions'
+import { getCachedTrainingPrograms, getCachedCategories } from '@/lib/actions'
 import type { Metadata } from 'next'
 
 export const revalidate = 3600 // Revalidate every hour
@@ -29,26 +28,18 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params
-  const projects = await getCachedProjects(locale)
+  const trainingPrograms = await getCachedTrainingPrograms(locale)
   const categories = await getCachedCategories(locale)
-  const content = await getCachedContent(locale)
-
-  // Transform stats data to match component interface
-  const statsData = content?.stats?.map(stat => ({
-    title: stat.title,
-    number: stat.number
-  })) || []
 
   return (
     <>
       <main className=" bg-white">
-        <Hero stats={statsData} />
+        <Hero stats={[]} />
         <Services services={[]} />
-        <Projects projects={projects} categories={categories} />
-        <WhyUsOption3 stats={statsData} />
-        <Contact contact={content?.contact} />
+        <Projects projects={trainingPrograms} categories={categories} />
+        <WhyUsOption3 stats={[]} />
       </main>
-      <Footer contact={content?.contact} socialLinks={content?.social_links} />
+      <Footer contact={undefined} socialLinks={undefined} />
     </>
   )
 }
